@@ -79,5 +79,43 @@ public class OrganisateurDAO extends DAO<Organisateur>{
 		return false;
 	}
 
-	
+	@Override
+    public Organisateur find(int id){
+		Organisateur organisateur = new Organisateur();
+        try{
+        	String sql ="SELECT * FROM Personne INNER JOIN Organisateur ON Organisateur.idOrganisateur = Personne.id WHERE id = " + id;
+            ResultSet result = this.connect.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+    ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+            if(result.first())
+            	organisateur = new Organisateur(id, result.getString("nom"), result.getString("prenom"), result.getString("adresse"), result.getString("telephone"), result.getString("pseudo"), result.getString("password"));
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return organisateur;
+    }
+
+	@Override
+	public List<Organisateur> getAll() {
+		List<Organisateur> list = new LinkedList<Organisateur>();
+        try {
+            String sql ="SELECT * FROM Personne INNER JOIN Organisateur ON Organisateur.idOrganisateur = Personne.id";
+            ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+            while(result.next()) {
+            	Organisateur organisateur = new Organisateur();
+            	organisateur.setId(result.getInt("idOrganisateur"));
+            	organisateur.setNom(result.getString("nom"));
+            	organisateur.setPrenom(result.getString("prenom"));
+            	organisateur.setAdresse(result.getString("adresse"));
+            	organisateur.setTelephone(result.getString("telephone"));
+            	organisateur.setPseudo(result.getString("pseudo"));
+            	organisateur.setPassword(result.getString("password"));
+                list.add(organisateur);
+           }
+        } catch (SQLException e) {
+           e.printStackTrace();
+       }
+        return list;
+	}
 }

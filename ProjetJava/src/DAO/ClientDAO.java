@@ -59,6 +59,45 @@ public class ClientDAO extends DAO<Client>{
         return false;
     }
 
+    @Override
+    public Client find(int id){
+    	Client client = new Client();
+        try{
+        	String sql ="SELECT * FROM Personne INNER JOIN Client ON Client.idClient = Personne.id WHERE id = " + id;
+            ResultSet result = this.connect.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+    ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+            if(result.first())
+            	client = new Client(id, result.getString("nom"), result.getString("prenom"), result.getString("adresse"), result.getString("telephone"), result.getString("pseudo"), result.getString("password"));
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return client;
+    }
+    
 
+    @Override
+    public List<Client> getAll() {
+        List<Client> list = new LinkedList<Client>();
+         try {
+             String sql ="SELECT * FROM Personne INNER JOIN Client ON Client.idClient = Personne.id";
+             ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+             while(result.next()) {
+                 Client client = new Client();
+                 client.setId(result.getInt("idClient"));
+                 client.setNom(result.getString("nom"));
+                 client.setPrenom(result.getString("prenom"));
+                 client.setAdresse(result.getString("adresse"));
+                 client.setTelephone(result.getString("telephone"));
+                 client.setPseudo(result.getString("pseudo"));
+                 client.setPassword(result.getString("password"));
+                 list.add(client);
+            }
+         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+         return list;
+    }
 }
 

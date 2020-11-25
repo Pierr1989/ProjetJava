@@ -78,5 +78,62 @@ public class GestionnaireDAO extends DAO<Gestionnaire> {
     	return gestionnaire;
     }*/
 
+	@Override
+    public Gestionnaire find(int id){
+    	Gestionnaire ges = new Gestionnaire();
+        try{
+        	String sql ="SELECT nom, prenom, adresse FROM Personne INNER JOIN Gestionnaire ON Gestionnaire.idGestionnaire = Personne.id WHERE id = " + id;
+            ResultSet result = this.connect.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+    ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+            if(result.first())
+            	ges = new Gestionnaire(id, result.getString("nom"), result.getString("prenom"), result.getString("adresse"), result.getString("telephone"), result.getString("pseudo"), result.getString("password"));
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return ges;
+    }
 
+	@Override
+	public List<Gestionnaire> getAll() {
+		List<Gestionnaire> list = new LinkedList<Gestionnaire>();
+        try {
+            String sql ="SELECT * FROM Personne INNER JOIN Gestionnaire ON Gestionnaire.idGestionnaire = Personne.id";
+            ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+            while(result.next()) {
+            	Gestionnaire gestionnaire = new Gestionnaire();
+                gestionnaire.setId(result.getInt("idGestionnaire"));
+                gestionnaire.setNom(result.getString("nom"));
+                gestionnaire.setPrenom(result.getString("prenom"));
+                gestionnaire.setAdresse(result.getString("adresse"));
+                gestionnaire.setTelephone(result.getString("telephone"));
+                gestionnaire.setPseudo(result.getString("pseudo"));
+                gestionnaire.setPassword(result.getString("password"));
+                list.add(gestionnaire);
+           }
+        } catch (SQLException e) {
+           e.printStackTrace();
+       }
+        return list;
+	}
+	
+
+    public boolean ajouterDateDispo(PlanningSalle planningS) {
+        try
+        {        	       	
+        	// On insert cette id dans la table correspondante
+            PreparedStatement state = connect.prepareStatement("INSERT INTO PlanningSalle(idPlanningSalle) VALUES (?)");
+            state.setInt(1, planningS.getId());
+            state.execute();
+            return true;
+        }
+
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
 }
