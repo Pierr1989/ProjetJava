@@ -38,7 +38,17 @@ public class Organisateur extends Personne {
 		return DAO.create(org);
 	}
 	
-
+	public boolean checkTelephone(String telephone) {
+		OrganisateurDAO DAO = new OrganisateurDAO(BosquetConnection.getInstance());
+		List<Organisateur> liste = new LinkedList<Organisateur>();
+		liste = DAO.getAll();
+		for(Organisateur organisateur : liste) {
+			if(organisateur.getTelephone().equals(telephone)){
+				return true;
+			}
+		}	
+		return false;
+	}
 	
 	public Organisateur login(String telephone, String password) {
 		OrganisateurDAO DAO = new OrganisateurDAO(BosquetConnection.getInstance());
@@ -70,6 +80,11 @@ public class Organisateur extends Personne {
 	public void update() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Organisateur find(int id) {
+		OrganisateurDAO DAO = new OrganisateurDAO(BosquetConnection.getInstance());
+		return DAO.find(id);	
 	}
 
 }

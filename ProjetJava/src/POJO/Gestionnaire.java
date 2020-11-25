@@ -83,6 +83,9 @@ public class Gestionnaire extends Personne {
 		
 	}
 
-
+	public Gestionnaire find(int id) {
+		GestionnaireDAO DAO = new GestionnaireDAO(BosquetConnection.getInstance());
+		return DAO.find(id);	
+	}
 
 }

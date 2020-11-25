@@ -27,7 +27,16 @@ public class Client extends Personne {
 		return DAO.create(cli);	
 	}
 	
-
+	public boolean checkTelephone(String telephone) {
+		List<Client> liste = new LinkedList<Client>();
+		liste = DAO.getAll();
+		for(Client client : liste) {
+			if(client.getTelephone().equals(telephone)){
+				return true;
+			}
+		}	
+		return false;
+	}
 	
 	public Client login(String telephone, String password) {
 	        List<Client> liste = new LinkedList<Client>();
