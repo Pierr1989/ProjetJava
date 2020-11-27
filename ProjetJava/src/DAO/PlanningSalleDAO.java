@@ -84,5 +84,25 @@ public class PlanningSalleDAO extends DAO<PlanningSalle> {
 	}
 
 
-	
+	@Override
+    public List<PlanningSalle> getAll() {
+        List<PlanningSalle> list = new LinkedList<PlanningSalle>();
+         try {
+             String sql ="SELECT * FROM PlanningSalle";
+             ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+             while(result.next()) {
+            	 PlanningSalle planningSalle = new PlanningSalle();
+            	 planningSalle.setId(result.getInt("idPlanningSalle"));
+            	 planningSalle.setIdGestionnaire(result.getInt("plan_gest_k"));
+            	 planningSalle.setIdReservation(result.getInt("plan_reser_k"));
+            	 planningSalle.setDateDebutR(result.getDate("dateDebutR"));
+            	 planningSalle.setDateFinR(result.getDate("dateFinR"));
+            	 planningSalle.setReserve(result.getBoolean("reserve"));
+                 list.add(planningSalle);
+            }
+         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+         return list;
+    }
 }

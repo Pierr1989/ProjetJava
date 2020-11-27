@@ -61,5 +61,26 @@ public class ReservationDAO extends DAO<Reservation> {
 		return null;
 	}
 
+	@Override
+    public List<Reservation> getAll() {
+        List<Reservation> list = new LinkedList<Reservation>();
+         try {
+             String sql ="SELECT * FROM Reservation";
+             ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+             while(result.next()) {
+                 Reservation res = new Reservation();
+                 res.setIdReservation(result.getInt("idReservation"));
+                 res.setAcompte(result.getDouble("acompte"));
+                 res.setSolde(result.getDouble("solde"));
+                 res.setStatut(result.getString("statut"));
+                 res.setPrix(result.getDouble("prix"));
+                 res.setIdOrganisateur(result.getInt("res_orga_k"));
+                 list.add(res);
+            }
+         } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+         return list;
+    }
 }
