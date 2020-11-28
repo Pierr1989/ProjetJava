@@ -389,12 +389,37 @@ public class CreationSpectacle extends JFrame {
 	}
 	
 	private void afficherPrixLocation(PlanningSalle prix) {
-	
+		if(prix == null) {
+			JLabel lblMontantLocation = new JLabel("0");
+		    lblMontantLocation.setBounds(212, 108, 46, 14);
+		    contentPane.add(lblMontantLocation);
+		}
+		else {
+			double prixLocation = res.prixLocation(prix);
+			String prixLocaString = "" + prixLocation;
+			
+			JLabel lblMontantLocation = new JLabel(prixLocaString);
+		    lblMontantLocation.setBounds(212, 108, 46, 14);
+		    contentPane.add(lblMontantLocation);
+		}	
 	}
 	
 	private int selectionCategorie() {
 
-		
+		if(rdbtnConcert.isSelected() && rdbtnBronze.isSelected())
+			return 1;
+		if(rdbtnConcert.isSelected() && rdbtnArgent.isSelected())
+			return 2;
+		if(rdbtnConcert.isSelected() && rdbtnOr.isSelected())
+			return 3;
+		if(rdbtnCirque.isSelected() && rdbtnBronze.isSelected())
+			return 4;
+		if(rdbtnCirque.isSelected() && rdbtnArgent.isSelected())
+			return 5;
+		if(rdbtnCirque.isSelected() && rdbtnOr.isSelected())
+			return 6;
+		if(rdbtnCirque.isSelected() && rdbtnDiamant.isSelected())
+			return 7;
 		return 0;
 	}
 }
