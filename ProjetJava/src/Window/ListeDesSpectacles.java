@@ -96,7 +96,22 @@ public class ListeDesSpectacles extends JFrame {
 	}
 	
 	private void AffichageListe() {
+		spec = new Spectacle();
+        listeSpec = new JList();
+
+        list = new LinkedList<Spectacle>();
+        list = spec.getAll();
+        for (Spectacle spectacle : list) {
+            listModel.addElement(spectacle);
+        }
         
+        listeSpec.setVisibleRowCount(3);
+        listeSpec.setModel(listModel);
+        listeSpec.setBounds(98, 86, 285, 119);
+
+        scrollPane = new JScrollPane(listeSpec, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBounds(98, 66, 285, 139);
+        contentPane.add(scrollPane);
     }
 
 }
