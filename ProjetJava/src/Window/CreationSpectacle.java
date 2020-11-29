@@ -215,98 +215,114 @@ public class CreationSpectacle extends JFrame {
         }
 		
 	    
-	    JButton btnCrerSpectacle = new JButton("CREER SPECTACLE");
+        JButton btnCrerSpectacle = new JButton("CREER SPECTACLE");
 	    btnCrerSpectacle.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		if(rdbtnDebout.isSelected()) {
-	    			if(txtPrix.getText().isEmpty() || textPlaceParClient.getText().isEmpty() || txtTitre.getText().isEmpty()) {
+	    			if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
 					}
-	    			else {
-	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
-	    				if(spectacle.add(spectacle)) {
-	    					double prixLoca = res.prixLocation(plan);
-			    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
-			    			res.add(res);		    			
-			    			plan.setIdReservation(res.getIdReservation());
-			    			plan.Update(plan);		    						    			
-			    			config = new Configuration("Debout", "place debout");
-			    			config.add(config);
-		    				double prix = numeroEntre;
-		    				cat = new Categorie(config.getType(), prix, 5000, 5000, config.getIdConfiguration());
-			    			cat.add(cat);		    						    			
-			    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
-						    frame.setLocationRelativeTo(null);
-						    frame.setVisible(true);  
-						    dispose();
-	    				}	
-	    				else
-	    					JOptionPane.showMessageDialog(null, "Echec création !");
-	    			}
+	    			if(textPlaceParClient.getText().isEmpty()) {
+	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), 0);
+					}
+	    			else
+						spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
+					
+    				if(spectacle.add(spectacle)) {
+    					double prixLoca = res.prixLocation(plan);
+		    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
+		    			res.add(res);		    			
+		    			plan.setIdReservation(res.getIdReservation());
+		    			plan.Update(plan);		    						    			
+		    			config = new Configuration("Debout", "place debout", spectacle.getIdSpectacle());
+		    			config.add(config);
+	    				double prix = numeroEntre;
+	    				cat = new Categorie(config.getType(), prix, 8000, 8000, config.getIdConfiguration());
+		    			cat.add(cat);		    						    			
+		    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
+					    frame.setLocationRelativeTo(null);
+					    frame.setVisible(true);  
+					    dispose();
+    				}	
+    				else
+    					JOptionPane.showMessageDialog(null, "Echec création !");
+	    			
 	    		}
+	    		
 				if(rdbtnConcert.isSelected()) {	//TODO dans le if avec les verif, ajoutet categorie,...
-					if(txtPrix.getText().isEmpty() || textPlaceParClient.getText().isEmpty() || txtTitre.getText().isEmpty()) {
+					if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
 					}				
-					else {
-						statut = selectionCategorie();
-	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
-	    				if(spectacle.add(spectacle)) {
-	    					double prixLoca = res.prixLocation(plan);
-			    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
-			    			res.add(res);		    			
-			    			plan.setIdReservation(res.getIdReservation());
-			    			plan.Update(plan);		    						    			
-			    			config = new Configuration("Concert", "place assise");
-			    			config.add(config);
-			    			double prix = numeroEntre;
-			    			prix = cat.prixPlace(statut, prix);
-		    				cat = new Categorie(config.getType(), prix, 5000, 5000, config.getIdConfiguration());
-			    			cat.add(cat);		    			
-			    			
-			    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
-						    frame.setLocationRelativeTo(null);
-						    frame.setVisible(true);  
-						    dispose();
-			    			
-			    			JOptionPane.showMessageDialog(null, "Spectacle créé avec succès !");
-	    				}	
-	    				else
-	    					JOptionPane.showMessageDialog(null, "Echec création !");
-	    			}
-					
+					if(textPlaceParClient.getText().isEmpty()) {
+	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), 0);
+					}
+	    			else
+						spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
+						
+    				if(spectacle.add(spectacle)) {
+    					double prixLoca = res.prixLocation(plan);
+		    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
+		    			res.add(res);		    			
+		    			plan.setIdReservation(res.getIdReservation());
+		    			plan.Update(plan);		    						    			
+		    			config = new Configuration("Concert", "place assise", spectacle.getIdSpectacle());
+		    			config.add(config);
+		    			double prix = numeroEntre;
+		    			cat = new Categorie("Bronze", prix, 3000, 3000, config.getIdConfiguration());
+		    			cat.add(cat);
+		    			cat = new Categorie("Argent", prix*1.10, 1500, 1500, config.getIdConfiguration());
+		    			cat.add(cat);
+		    			cat = new Categorie("Or", prix*1.20, 500, 500, config.getIdConfiguration());
+		    			cat.add(cat);	    			
+		    			
+		    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
+					    frame.setLocationRelativeTo(null);
+					    frame.setVisible(true);  
+					    dispose();
+		    			
+		    			JOptionPane.showMessageDialog(null, "Spectacle créé avec succès !");
+    				}	
+    				else
+    					JOptionPane.showMessageDialog(null, "Echec création !");				
 				}
+				
 				if(rdbtnCirque.isSelected()) {
-					if(txtPrix.getText().isEmpty() || textPlaceParClient.getText().isEmpty() || txtTitre.getText().isEmpty()) {
+					if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
 					}
-					else {
-						statut = selectionCategorie();
-	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
-	    				if(spectacle.add(spectacle)) {
-	    					double prixLoca = res.prixLocation(plan);
-			    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
-			    			res.add(res);		    			
-			    			plan.setIdReservation(res.getIdReservation());
-			    			plan.Update(plan);
-							config = new Configuration("Cirque", "place assise");
-			    			config.add(config);
-			    			double prix = numeroEntre;
-		    				cat = new Categorie(config.getType(), prix, 5000, 5000, config.getIdConfiguration());
-			    			cat.add(cat);		    			
-			    			
-			    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
-						    frame.setLocationRelativeTo(null);
-						    frame.setVisible(true);  
-						    dispose();
-			    			
-			    			JOptionPane.showMessageDialog(null, "Spectacle créé avec succès !");
-	    				}	
-	    				else
-	    					JOptionPane.showMessageDialog(null, "Echec création !");
-	    			}
-					
-				}
+					if(textPlaceParClient.getText().isEmpty()) {
+	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), 0);
+					}
+	    			else
+						spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);				
+    				if(spectacle.add(spectacle)) {
+    					double prixLoca = res.prixLocation(plan);
+		    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
+		    			res.add(res);		    			
+		    			plan.setIdReservation(res.getIdReservation());
+		    			plan.Update(plan);
+						config = new Configuration("Cirque", "place assise", spectacle.getIdSpectacle());
+		    			config.add(config);
+		    			double prix = numeroEntre;
+		    			cat = new Categorie("Bronze", prix, 1500, 1500, config.getIdConfiguration());
+		    			cat.add(cat);
+		    			cat = new Categorie("Argent", prix*1.10, 1500, 1500, config.getIdConfiguration());
+		    			cat.add(cat);
+		    			cat = new Categorie("Or", prix*1.25, 2000, 2000, config.getIdConfiguration());
+		    			cat.add(cat);	
+		    			cat = new Categorie("Diamant", prix*1.50, 1000, 1000, config.getIdConfiguration());
+		    			cat.add(cat);	
+		    			
+		    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
+					    frame.setLocationRelativeTo(null);
+					    frame.setVisible(true);  
+					    dispose();
+		    			
+		    			JOptionPane.showMessageDialog(null, "Spectacle créé avec succès !");
+    				}	
+    				else
+    					JOptionPane.showMessageDialog(null, "Echec création !");
+    			}
 	    	}
 	    });
 	    btnCrerSpectacle.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
