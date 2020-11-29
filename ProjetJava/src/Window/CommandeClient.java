@@ -157,7 +157,7 @@ public class CommandeClient extends JFrame {
 	    confChoisie = spec.getConfigDuSpectacle(spec.getIdSpectacle());
 	    List<Categorie> catChoisie = new LinkedList<Categorie>();
 	    catChoisie = config.getCategorieDeLaConfiguration(confChoisie.getIdConfiguration());
-	    if(confChoisie.getType().equals("Debout"))	{
+	    if(getStatut(confChoisie) == 1)	{
 	    	 rdbtnBronze.setVisible(false);
 	         rdbtnArgent.setVisible(false);
 	         rdbtnOr.setVisible(false);
@@ -171,11 +171,11 @@ public class CommandeClient extends JFrame {
 	         lblDiamant.setVisible(false);
 	         lblPlacesDiamant.setVisible(false);
 	    }
-	    else if(confChoisie.getType().equals("Concert")) {
+	    else if(getStatut(confChoisie) == 2) {
 	    	 rdbtnBronze.setVisible(true);
 	         rdbtnArgent.setVisible(true);
 	         rdbtnOr.setVisible(true);
-	         rdbtnDiamant.setVisible(true);
+	         rdbtnDiamant.setVisible(false);
 	         lblArgent.setVisible(true);
 	         lblPlacesArgent.setVisible(true);
 	         lblOr.setVisible(true);
@@ -193,7 +193,7 @@ public class CommandeClient extends JFrame {
 	         }
 	    }
 	    
-	    else {	             
+	    else {//(getStatut(confChoisie) == 3) {	             
 	    	 rdbtnBronze.setVisible(true);
 	         rdbtnArgent.setVisible(true);
 	         rdbtnOr.setVisible(true);
@@ -204,6 +204,27 @@ public class CommandeClient extends JFrame {
 	         lblPlacesOr.setVisible(true);
 	         lblDiamant.setVisible(true);
 	         lblPlacesDiamant.setVisible(true);
+	         
+	         for(int i = 0; i< catChoisie.size(); i++) {
+	        	 if(catChoisie.get(i).getType().equals("Bronze"))
+	        		 lblPlacesBronze.setText(catChoisie.get(i).getNbrPlaceDispo()+"");
+	        	 if(catChoisie.get(i).getType().equals("Argent"))
+	        		 lblPlacesArgent.setText(catChoisie.get(i).getNbrPlaceDispo()+"");
+	        	 if(catChoisie.get(i).getType().equals("Or"))
+	        		 lblPlacesOr.setText(catChoisie.get(i).getNbrPlaceDispo()+"");
+	        	 if(catChoisie.get(i).getType().equals("Diamant"))
+	        		 lblPlacesDiamant.setText(catChoisie.get(i).getNbrPlaceDispo()+"");
+	         }
 	    }
+	}
+	
+	private int getStatut(Configuration config) {
+		if(config.getType().equals("Debout"))
+			return 1;
+		if(config.getType().equals("Concert"))
+			return 2;
+		if(config.getType().equals("Cirque"))
+			return 3;
+		return 0;
 	}
 }
