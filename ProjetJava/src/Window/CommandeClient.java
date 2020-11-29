@@ -4,17 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import POJO.Categorie;
 import POJO.Configuration;
+import POJO.Place;
 import POJO.Representation;
 import POJO.Spectacle;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
+
 import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -33,6 +39,13 @@ public class CommandeClient extends JFrame {
     private JRadioButton rdbtnOr;
     private JRadioButton rdbtnDiamant;
     private Configuration config = new Configuration();
+    private int statut = 0;
+    private JTextField textNombrePlaceSouhaitee;
+    private JScrollPane scrollPane;
+	private DefaultListModel listModel = new DefaultListModel();
+	private Place place;// = new Spectacle();
+	private JList listePlace;
+	private List<Place> liste;
 
 	/**
 	 * Launch the application.
@@ -151,6 +164,90 @@ public class CommandeClient extends JFrame {
 	    JLabel lblPlacesDiamant = new JLabel("");
 	    lblPlacesDiamant.setBounds(340, 204, 46, 14);
 	    contentPane.add(lblPlacesDiamant);
+	    
+	    JLabel lblNewLabel_3 = new JLabel("Type place:");
+	    lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+	    lblNewLabel_3.setBounds(10, 282, 105, 14);
+	    contentPane.add(lblNewLabel_3);
+	    
+	    JLabel lblNewLabel_4 = new JLabel("RESERVER :");
+	    lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 14));
+	    lblNewLabel_4.setBounds(10, 259, 109, 14);
+	    contentPane.add(lblNewLabel_4);
+	    
+	    JLabel lblNewLabel_5 = new JLabel("Nombre de place(s):");
+	    lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+	    lblNewLabel_5.setBounds(121, 282, 124, 14);
+	    contentPane.add(lblNewLabel_5);
+	    
+	    textNombrePlaceSouhaitee = new JTextField();
+	    textNombrePlaceSouhaitee.setBounds(131, 304, 86, 20);
+	    contentPane.add(textNombrePlaceSouhaitee);
+	    textNombrePlaceSouhaitee.setColumns(10);
+	    
+	    JLabel lblNewLabel_6 = new JLabel("Contenu actuel de votre panier:");
+	    lblNewLabel_6.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+	    lblNewLabel_6.setBounds(311, 282, 194, 14);
+	    contentPane.add(lblNewLabel_6);
+	    
+	    AffichageListePlace();
+	    
+	    JLabel lblNewLabel_7 = new JLabel("Mode de livraison :");
+	    lblNewLabel_7.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+	    lblNewLabel_7.setBounds(515, 282, 124, 14);
+	    contentPane.add(lblNewLabel_7);
+	    
+	    JRadioButton rdbtnSurPlace = new JRadioButton("Sur place");
+	    rdbtnSurPlace.setSelected(true);
+	    rdbtnSurPlace.setBounds(521, 303, 109, 23);
+	    contentPane.add(rdbtnSurPlace);
+	    
+	    JRadioButton rdbtnPrior = new JRadioButton("Envoi \"prior\"");
+	    rdbtnPrior.setBounds(521, 329, 109, 23);
+	    contentPane.add(rdbtnPrior);
+	    
+	    JRadioButton rdbtnSecurise = new JRadioButton("Envoi \"s\u00E9curis\u00E9\" (+10\u20AC)");
+	    rdbtnSecurise.setBounds(521, 357, 144, 23);
+	    contentPane.add(rdbtnSecurise);
+	    
+	  //Group the radio buttons.
+	    ButtonGroup groupLivraison = new ButtonGroup();
+	    groupLivraison.add(rdbtnSurPlace);
+	    groupLivraison.add(rdbtnPrior);
+	    groupLivraison.add(rdbtnSecurise);
+	    
+	    JLabel lblNewLabel_8 = new JLabel("Mode de payement:");
+	    lblNewLabel_8.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+	    lblNewLabel_8.setBounds(683, 282, 130, 14);
+	    contentPane.add(lblNewLabel_8);
+	    
+	    JRadioButton rdbtnVisa = new JRadioButton("Visa");
+	    rdbtnVisa.setSelected(true);
+	    rdbtnVisa.setBounds(683, 303, 109, 23);
+	    contentPane.add(rdbtnVisa);
+	    
+	    JRadioButton rdbtnPaypal = new JRadioButton("Paypal");
+	    rdbtnPaypal.setBounds(683, 329, 109, 23);
+	    contentPane.add(rdbtnPaypal);
+	    
+	    JRadioButton rdbtnSepa = new JRadioButton("SEPA");
+	    rdbtnSepa.setBounds(683, 357, 109, 23);
+	    contentPane.add(rdbtnSepa);
+	    
+	  //Group the radio buttons.
+	    ButtonGroup groupPayement = new ButtonGroup();
+	    groupPayement.add(rdbtnVisa);
+	    groupPayement.add(rdbtnPaypal);
+	    groupPayement.add(rdbtnSepa);
+	    
+	    JButton btnValiderNombrePlace = new JButton("OK");
+	    btnValiderNombrePlace.setBounds(226, 303, 46, 23);
+	    contentPane.add(btnValiderNombrePlace);
+	    
+	    JButton btnNewButton = new JButton("VALIDER");
+	    btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+	    btnNewButton.setBounds(836, 329, 118, 23);
+	    contentPane.add(btnNewButton);
 	    
 	    // Affichage de diamant selon configuration
 	    Configuration confChoisie = new Configuration();
