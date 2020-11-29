@@ -2,7 +2,9 @@ package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import POJO.Place;
@@ -50,8 +52,21 @@ public class PlaceDAO extends DAO<Place> {
 	}
 
 	@Override
-	public List<Place> getAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Place> getAll() {
+        List<Place> list = new LinkedList<Place>();
+         try {
+             String sql ="SELECT * FROM Place";
+             ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
+             while(result.next()) {
+            	 Place place = new Place();
+            	 place.setNumPlace(result.getInt("numPlace"));
+            	 place.setPrix(result.getDouble("prix"));
+            	 place.setIdCommande(result.getInt("place_com_k"));           	 
+                 list.add(place);
+            }
+         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+         return list;
+    }
 }

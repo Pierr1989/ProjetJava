@@ -1,5 +1,7 @@
 package POJO;
 
+import java.util.List;
+
 import DAO.BosquetConnection;
 import DAO.PlaceDAO;
 
@@ -31,6 +33,13 @@ public class Place {
         this.numPlace = numPLace;
     }
     
+    public int  getIdCommande() {
+        return idCommande;
+    }
+    public void setIdCommande(int idCommande) {
+        this.idCommande = idCommande;
+    }
+    
     public Double  getPrix() {
         return prix;
     }
@@ -45,5 +54,7 @@ public class Place {
 		return DAO.create(place);	
 	}
     
-    
+    public List<Place> getAll(){
+		return DAO.getAll();
+    }
 }
