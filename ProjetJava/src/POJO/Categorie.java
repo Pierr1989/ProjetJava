@@ -1,5 +1,7 @@
 package POJO;
 
+import java.util.List;
+
 import DAO.BosquetConnection;
 import DAO.CategorieDAO;
 
@@ -10,28 +12,29 @@ public class Categorie {
 	private double prix;
 	private int nbrPlaceDispo;
 	private int nbrPlaceMax;
-	private int idConfiguration;
+	private Configuration configuration;
+	CategorieDAO DAO = new CategorieDAO(BosquetConnection.getInstance());
 	
 	/*CONSTRUCTEURS*/
 	public Categorie() {
 		
 	}
 	
-	public Categorie(String type, double prix, int nbrPlaceDispo, int nbrPlaceMax, int idConfiguration) {
+	public Categorie(String type, double prix, int nbrPlaceDispo, int nbrPlaceMax, Configuration configuration) {
 		this.type = type;
 		this.prix = prix;
 		this.nbrPlaceDispo = nbrPlaceDispo;
 		this.nbrPlaceMax = nbrPlaceMax;
-		this.idConfiguration = idConfiguration; 
+		this.configuration = configuration; 
 	}
 	
-	public Categorie(int idCategorie, String type, double prix, int nbrPlaceDispo, int nbrPlaceMax, int idConfiguration) {
+	public Categorie(int idCategorie, String type, double prix, int nbrPlaceDispo, int nbrPlaceMax, Configuration configuration) {
 		this.idCategorie = idCategorie;
 		this.type = type;
 		this.prix = prix;
 		this.nbrPlaceDispo = nbrPlaceDispo;
 		this.nbrPlaceMax = nbrPlaceMax;
-		this.idConfiguration = idConfiguration;
+		this.configuration = configuration;
 	}
 	
 	
@@ -42,27 +45,26 @@ public class Categorie {
     public void setIdCategorie(int idCategorie) {
         this.idCategorie = idCategorie;
     }
-    
-    public int  getIdConfiguration() {
-        return idConfiguration;
-    }
-    public void setIdConfiguration(int idConfiguration) {
-        this.idConfiguration = idConfiguration;
-    }
-	
-	
+    	
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
+
 	public String  getType() {
         return type;
     }
-    public void setAcompte(String type) {
+    public void setType(String type) {
         this.type = type;
     }
-    
-    
+      
     public double  getPrix() {
         return prix;
     }
-    public void setSolde(double prix) {
+    public void setPrix(double prix) {
         this.prix = prix;
     }
     
@@ -82,8 +84,32 @@ public class Categorie {
     
 	
 	/*METHODES*/
-    public boolean add(Categorie cat) {
-    	CategorieDAO DAO = new CategorieDAO(BosquetConnection.getInstance());
-		return DAO.create(cat);	
+    public boolean add() {
+    	return DAO.create(this);	
 	}
+    
+    public boolean update(Categorie cat) {
+    	return DAO.update(cat);	
+	}
+    
+    public List<Categorie> getAll() {
+    	return DAO.getAll();
+    }
+    
+    @Override
+    public String toString() { 
+        return String.format(type); 
+    }
+    
+    public int diminuerNbreDePlaceClient(int nbrPlace) {
+    	int placeMaxRestanteClient = nbrPlaceMax - nbrPlace;
+    	
+    	return placeMaxRestanteClient;
+    }
+    
+    public int diminuerNbreDePlaceTotal(int nbrPlace) {
+    	int placeMaxTotal = nbrPlaceDispo - nbrPlace;
+    	
+    	return placeMaxTotal;
+    }
 }

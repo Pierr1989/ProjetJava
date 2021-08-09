@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import DAO.BosquetConnection;
+import DAO.CategorieDAO;
 import DAO.ConfigurationDAO;
 
 public class Configuration {
@@ -13,6 +14,9 @@ public class Configuration {
 	private String type;
 	private String description;
 	List<Categorie> listeCategorie;
+	
+	ConfigurationDAO DAO = new ConfigurationDAO(BosquetConnection.getInstance());
+	CategorieDAO DAOcategorie = new CategorieDAO(BosquetConnection.getInstance());
 	
 	/*CONSTRUCTEURS*/
 	public Configuration() {
@@ -41,7 +45,16 @@ public class Configuration {
         this.idConfiguration = idConfiguration;
     }
     
-    public List<Categorie>  getListCategorie() {
+    
+    public List<Categorie> getListeCategorie() {
+		return listeCategorie;
+	}
+
+	public void setListeCategorie(List<Categorie> listeCategorie) {
+		this.listeCategorie = listeCategorie;
+	}
+
+	public List<Categorie>  getListCategorie() {
         return listeCategorie;
     }
     public void setListeArtiste(List<Categorie> listeCategorie) {
@@ -65,9 +78,43 @@ public class Configuration {
 	
 	
 	/*METHODES*/
-    public boolean add(Configuration conf) {
-    	ConfigurationDAO DAO = new ConfigurationDAO(BosquetConnection.getInstance());
-		return DAO.create(conf);	
+    public boolean add() {
+		return DAO.create(this);	
 	}
     
+    public boolean delete() {
+    	return DAO.delete(this);
+    }
+    
+    public List<Configuration> getAll(){
+		return DAO.getAll();
+    }
+    
+    @Override
+    public String toString() { 
+        return String.format(type + "  " + description); 
+    }
+    
+    public List<Categorie> getCategorieDeLaConfiguration(int idConf) {
+    	listeCategorie = new LinkedList<Categorie>();
+    	listeCategorie = DAOcategorie.getAll();
+    	List<Categorie> ListCategorieTrouvee = new LinkedList<Categorie>();
+		for(int i = 0; i<listeCategorie.size(); i++) {
+			if(listeCategorie.get(i).getConfiguration().getIdConfiguration() == idConf) {
+				ListCategorieTrouvee.add(listeCategorie.get(i));
+			}
+		}
+		return ListCategorieTrouvee;
+	}
+    
+    public Categorie getlimiteDebout(int idConf) {
+    	Categorie cat = new Categorie();
+    	listeCategorie = DAOcategorie.getAll();
+		for(int i = 0; i<listeCategorie.size(); i++) {
+			if(listeCategorie.get(i).getConfiguration().getIdConfiguration() == idConf) {
+				cat = listeCategorie.get(i);
+			}
+		}
+		return cat;
+	}
 }

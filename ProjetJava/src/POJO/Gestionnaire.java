@@ -5,55 +5,56 @@ import java.util.List;
 
 import DAO.BosquetConnection;
 import DAO.GestionnaireDAO;
-import DAO.PlanningSalleDAO;
 
 public class Gestionnaire extends Personne {
 	
 	private static final long serialVersionUID = 1L;
-	PlanningSalle planningS = new PlanningSalle();
-	PlanningSalleDAO DAO = new PlanningSalleDAO(BosquetConnection.getInstance());
-	private List<PlanningSalle> listePlanningSalle;
+	private String telephone;
+	
 	/*CONSTRUCTEURS*/
 	public Gestionnaire() {
 		
 	}
 	
-	public Gestionnaire(int id, String nom, String prenom, String adresse, String telephone, String pseudo, String password) {
-		super(id, nom, prenom, adresse, telephone, pseudo, password);
-		listePlanningSalle = new LinkedList<PlanningSalle>();
+	public Gestionnaire(int id,String nom, String prenom, String adresse, String password, String email, String role, String telephone) {
+		super(id, nom, prenom, adresse, password, email, role);
+		this.telephone=telephone;
 	}
 	
-	public Gestionnaire(String nom, String prenom, String adresse, String telephone, String pseudo, String password) {
-		super(nom, prenom, adresse,telephone, pseudo, password);
-		listePlanningSalle = new LinkedList<PlanningSalle>();
+	public Gestionnaire(String nom, String prenom, String adresse, String password, String email, String role, String telephone) {
+		super(nom, prenom, adresse, password, email, role);
+		this.telephone=telephone;
 	}
 	
 	//Accesseurs
-		public List<PlanningSalle> getListePlanningSalle() {
-	        return listePlanningSalle;
-	    }
-	    public void setListePlanningSalle(List<PlanningSalle> listePlanningSalle) {
-	        this.listePlanningSalle = listePlanningSalle;
-	    }
+	public String getTelephone() {
+		return telephone;
+	}
 
-	/*public boolean add(Gestionnaire gest) {		//inutile car créé en dur
-		GestionnaireDAO DAO = new GestionnaireDAO(BosquetConnection.getInstance());
-		return DAO.create(gest);
-	}*/
-	    
-    public boolean checkTelephone(String telephone) {
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	
+	
+	//méthodes
+	public boolean add() {
+		super.add();
+		return DAO.create(this);	
+	}
+	
+    public boolean checkEmail(String email) {
 		GestionnaireDAO DAO = new GestionnaireDAO(BosquetConnection.getInstance());
 		List<Gestionnaire> liste = new LinkedList<Gestionnaire>();
 		liste = DAO.getAll();
 		for(Gestionnaire gestionnaire : liste) {
-			if(gestionnaire.getTelephone().equals(telephone)){
+			if(gestionnaire.getEmail().equals(email)){
 				return true;
 			}
 		}	
 		return false;
 	}
-	
-	public Gestionnaire login(String telephone, String password) {
+
+	public Gestionnaire login(String email, String password) {
 		GestionnaireDAO DAO = new GestionnaireDAO(BosquetConnection.getInstance());
         List<Gestionnaire> liste = new LinkedList<Gestionnaire>();
         Gestionnaire gest = new Gestionnaire();
@@ -62,7 +63,7 @@ public class Gestionnaire extends Personne {
         int found = 0;
         
         for(int i=0; i< liste.size(); i++) {
-        	if(liste.get(i).getTelephone().equals(telephone)  && liste.get(i).getPassword().equals(password)) {
+        	if(liste.get(i).getEmail().equals(email)  && liste.get(i).getPassword().equals(password)) {
                 gest = liste.get(i);
                 found = 1;
         	}
@@ -75,13 +76,6 @@ public class Gestionnaire extends Personne {
         return gest;
 	}
 
-
-
-	
-	public void annulerDateDispo() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public Gestionnaire find(int id) {
 		GestionnaireDAO DAO = new GestionnaireDAO(BosquetConnection.getInstance());

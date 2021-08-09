@@ -5,43 +5,69 @@ import java.util.List;
 
 import DAO.ArtisteDAO;
 import DAO.BosquetConnection;
-import DAO.ClientDAO;
-import DAO.DAO;
+
 
 public class Artiste extends Personne {
-	
+
 	private static final long serialVersionUID = 1L;
 	ArtisteDAO DAO = new ArtisteDAO(BosquetConnection.getInstance());
+	private String nomDeScene;
+	private Spectacle spectacle;
 	
 	/*CONSTRUCTEURS*/
 	public Artiste() {
 		
 	}
 	
-	public Artiste(String nom) {
-		super(nom);
+	public Artiste(int id,String nom, String prenom, String adresse, String password, String email, String role, String nomDeScene, Spectacle spectacle) {
+		super(id, nom, prenom, adresse, password, email, role);
+		this.nomDeScene=nomDeScene;
+		this.spectacle=spectacle;
 	}
 	
-	public Artiste(int id, String nom, String prenom, String adresse, String telephone, String pseudo, String password) {
-		super(id, nom, prenom, adresse, telephone, pseudo, password);
+	public Artiste(String nom, String prenom, String adresse, String password, String email, String role, String nomDeScene, Spectacle spectacle) {
+		super(nom, prenom, adresse, password, email, role);
+		this.nomDeScene=nomDeScene;
+		this.spectacle=spectacle;
 	}
 	
-	public Artiste(String nom, String prenom, String adresse, String telephone, String pseudo, String password) {
-		super(nom, prenom, adresse, telephone, pseudo, password);
+	//get set	
+	public String getNomDeScene() {
+		return nomDeScene;
 	}
 
+	public void setNomDeScene(String nomDeScene) {
+		this.nomDeScene = nomDeScene;
+	}
+	public Spectacle getSpectacle() {
+		return spectacle;
+	}
+
+	public void setSpectacle(Spectacle spectacle) {
+		this.spectacle = spectacle;
+	}
+
+	//Méthodes
+
+
 	public boolean add(Artiste art) {
+		super.add();
 		return DAO.create(art);
 	}
 	
-	public boolean checkNom(String nom) {
+	@Override
+    public String toString() { 
+        return String.format(nomDeScene); 
+    }
+	
+	public boolean checkNomDeScene(String nomDeScene) {
         List<Artiste> liste = new LinkedList<Artiste>();
         int find = 0;
 
         liste = DAO.getAll();
 
         for(int i = 0; i < liste.size(); i++) {
-            if(liste.get(i).nom.equals(nom)) {
+            if(liste.get(i).nomDeScene.equals(nomDeScene)) {
                 find = 1;
             }
         }
@@ -58,8 +84,8 @@ public class Artiste extends Personne {
 		
 	}
 
-	public void update() {
-		// TODO Auto-generated method stub
+	public boolean update(Artiste arti) {
+		return DAO.update(arti);
 		
 	}
 
@@ -71,4 +97,6 @@ public class Artiste extends Personne {
 	public List<Artiste> getAll() {
         return DAO.getAll();
     }
+	
+	
 }
