@@ -22,13 +22,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 
 public class Connection extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textTelephone;
-	private JPasswordField textPassword;
-	private long numeroEntre;
-	private String tel;
-	
+	private JTextField textEmail;
+	private JPasswordField textPassword;	
 
 	/**
 	 * Launch the application.
@@ -62,7 +59,7 @@ public class Connection extends JFrame {
 		lblNewLabel.setBounds(188, 11, 424, 30);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("T\u00E9l\u00E9phone :");
+		JLabel lblNewLabel_1 = new JLabel("Email :");
 		lblNewLabel_1.setBounds(289, 202, 71, 14);
 		contentPane.add(lblNewLabel_1);
 		
@@ -70,25 +67,10 @@ public class Connection extends JFrame {
 		lblNewLabel_2.setBounds(288, 227, 87, 14);
 		contentPane.add(lblNewLabel_2);
 		
-		textTelephone = new JTextField();
-		textTelephone.setBounds(430, 199, 86, 20);
-		contentPane.add(textTelephone);
-		textTelephone.setColumns(10);
-		
-		// Vérification entrée telephone, number only
-		textTelephone.addKeyListener(new java.awt.event.KeyAdapter() {
-
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                try {
-                    numeroEntre = Long.parseLong(textTelephone.getText());
-                } 
-                catch (Exception e) {
-                    JOptionPane.showMessageDialog(rootPane, "Veuillez écrire des nombres !");
-                    textTelephone.setText("");
-                }
-            }
-        });
-		
+		textEmail = new JTextField();
+		textEmail.setBounds(430, 199, 86, 20);
+		contentPane.add(textEmail);
+		textEmail.setColumns(10);
 		
 		textPassword = new JPasswordField();
 		textPassword.setBounds(430, 224, 86, 20);
@@ -117,45 +99,46 @@ public class Connection extends JFrame {
 		JButton btnValide = new JButton("Valider");
 		btnValide.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(rdBtnClient.isSelected()) {
-					tel = Long.toString(numeroEntre);
-					Client cli = new Client();
-					cli = cli.login("0"+tel, textPassword.getText());
-					if(cli != null) {
-						EspaceClient frame = new EspaceClient(cli);
-					    frame.setLocationRelativeTo(null);
-					    frame.setVisible(true);  
-					    dispose();
+				if(textEmail.getText().isEmpty() || textPassword.getText().isEmpty())
+					JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
+				else {
+					if(rdBtnClient.isSelected()) {
+						Client cli = new Client();
+						cli = cli.login(textEmail.getText(), textPassword.getText());
+						if(cli != null) {
+							EspaceClient frame = new EspaceClient(cli);
+						    frame.setLocationRelativeTo(null);
+						    frame.setVisible(true);  
+						    dispose();
+						}
+						else
+							JOptionPane.showMessageDialog(null, "Erreur de connection");
+						
 					}
-					else
-						JOptionPane.showMessageDialog(null, "Erreur de connection");
-					
-				}
-				if(rdBtnOrganisateur.isSelected()) {
-					tel = Long.toString(numeroEntre);
-					Organisateur orga = new Organisateur();
-					orga = orga.login("0"+tel, textPassword.getText());
-					if(orga != null) {
-						EspaceOrganisateur frame = new EspaceOrganisateur(orga);
-					    frame.setLocationRelativeTo(null);
-					    frame.setVisible(true);  
-					    dispose();
+					if(rdBtnOrganisateur.isSelected()) {
+						Organisateur orga = new Organisateur();
+						orga = orga.login(textEmail.getText(), textPassword.getText());
+						if(orga != null) {
+							EspaceOrganisateur frame = new EspaceOrganisateur(orga);
+						    frame.setLocationRelativeTo(null);
+						    frame.setVisible(true);  
+						    dispose();
+						}
+						else
+							JOptionPane.showMessageDialog(null, "Erreur de connection");
 					}
-					else
-						JOptionPane.showMessageDialog(null, "Erreur de connection");
-				}
-				if(rdBtnGestionnaire.isSelected()) {
-					tel = Long.toString(numeroEntre);
-					Gestionnaire gest = new Gestionnaire();
-					gest = gest.login("0"+tel, textPassword.getText());
-					if(gest != null) {
-						EspaceGestionnaire frame = new EspaceGestionnaire(gest);
-					    frame.setLocationRelativeTo(null);
-					    frame.setVisible(true);  
-					    dispose();
+					if(rdBtnGestionnaire.isSelected()) {
+						Gestionnaire gest = new Gestionnaire();
+						gest = gest.login(textEmail.getText(), textPassword.getText());
+						if(gest != null) {
+							EspaceGestionnaire frame = new EspaceGestionnaire(gest);
+						    frame.setLocationRelativeTo(null);
+						    frame.setVisible(true);  
+						    dispose();
+						}
+						else
+							JOptionPane.showMessageDialog(null, "Erreur de connection");
 					}
-					else
-						JOptionPane.showMessageDialog(null, "Erreur de connection");
 				}
 			}
 		});
