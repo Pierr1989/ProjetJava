@@ -15,6 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import POJO.Artiste;
@@ -26,15 +29,9 @@ import POJO.PlanningSalle;
 import POJO.Reservation;
 import POJO.Spectacle;
 
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
+public class CreationSpectacle extends JFrame implements ItemListener{
 
-public class CreationSpectacle extends JFrame {
-
-																				/*ATTRIBUTS*/
+	private static final long serialVersionUID = 1L;																			/*ATTRIBUTS*/
 	private JPanel contentPane;
 	private JTextField txtTitre;
 	private Artiste artiste = new Artiste();
@@ -58,6 +55,18 @@ public class CreationSpectacle extends JFrame {
     private JRadioButton rdbtnDiamant;
     private int statut;
 	private JTextField textPlaceParClient;
+	private int statutLimite = 0;
+	private JTextField textFieldDescription;
+	private JTextField textFieldBronze;
+	private JTextField textFieldArgent;
+	private JTextField textFieldOr;
+	private JTextField textFieldDiamant;
+	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_5_1;
+	private JLabel lblNewLabel_5_2;
+	private JLabel lblNewLabel_5_2_1;
+	JLabel lblNewLabel_10;
+	private ButtonGroup group ;
 																				/*FIN ATTRIBUTS*/
 	/**
 	 * Launch the application.
@@ -81,20 +90,6 @@ public class CreationSpectacle extends JFrame {
 		JLabel label = new JLabel(plan.toString());
 		label.setBounds(23, 98, 182, 35);
 		contentPane.add(label);
-		
-		// Retour menu
-		JButton btnAccueil = new JButton("Annuler cr\u00E9ation");
-		btnAccueil.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				plan.AnnulerReservation(plan);
-				Accueil frame = new Accueil();
-			    frame.setLocationRelativeTo(null);
-			    frame.setVisible(true);  
-			    dispose();
-			}
-		});
-		btnAccueil.setBounds(386, 461, 123, 30);
-		contentPane.add(btnAccueil);
 		
 		JLabel lblNewLabel = new JLabel("Rappel date s\u00E9lectionn\u00E9e:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -135,78 +130,15 @@ public class CreationSpectacle extends JFrame {
 		contentPane.add(rdbtnCirque);
 		
 		//Group the radio buttons.
-	    ButtonGroup group = new ButtonGroup();
+	    group = new ButtonGroup();
 	    group.add(rdbtnDebout);
 	    group.add(rdbtnConcert);
 	    group.add(rdbtnCirque);
 	    
-	    rdbtnBronze = new JRadioButton("Bronze");
-	    rdbtnBronze.setVisible(false);
-	    rdbtnBronze.setSelected(true);
-	    rdbtnBronze.setBounds(6, 367, 109, 23);
-	    contentPane.add(rdbtnBronze);
+	    rdbtnDebout.addItemListener(this);
+	    rdbtnConcert.addItemListener(this);
+	    rdbtnCirque.addItemListener(this);
 	    
-	    rdbtnArgent = new JRadioButton("Argent");
-	    rdbtnArgent.setVisible(false);
-	    rdbtnArgent.setBounds(6, 393, 109, 23);
-	    contentPane.add(rdbtnArgent);
-	    
-	    rdbtnOr = new JRadioButton("Or");
-	    rdbtnOr.setVisible(false);
-	    rdbtnOr.setBounds(6, 421, 109, 23);
-	    contentPane.add(rdbtnOr);
-	    
-	    rdbtnDiamant = new JRadioButton("Diamant");
-	    rdbtnDiamant.setVisible(false);
-	    rdbtnDiamant.setBounds(6, 448, 109, 23);
-	    contentPane.add(rdbtnDiamant);	
-	    
-	  //Group the radio buttons.
-	    ButtonGroup groupCat = new ButtonGroup();
-	    groupCat.add(rdbtnBronze);
-	    groupCat.add(rdbtnArgent);
-	    groupCat.add(rdbtnOr);
-	    groupCat.add(rdbtnDiamant);
-	    
-	    ItemListener itemListenerConcert = new ItemListener() {
-	        public void itemStateChanged(ItemEvent itemEvent) {
-	          //AbstractButton rdbtnConcert = (AbstractButton)itemEvent.getSource();
-	          int state = itemEvent.getStateChange();
-
-	          if (state == ItemEvent.SELECTED) {
-	        	  rdbtnBronze.setVisible(true);
-	        	  rdbtnArgent.setVisible(true);
-	        	  rdbtnOr.setVisible(true);
-		      }  
-	          else {
-	        	  rdbtnBronze.setVisible(false);
-	        	  rdbtnArgent.setVisible(false);
-	        	  rdbtnOr.setVisible(false);
-	          }
-	        }
-	      };
-	    rdbtnConcert.addItemListener(itemListenerConcert);
-	    
-	    ItemListener itemListenerCirque = new ItemListener() {
-	        public void itemStateChanged(ItemEvent itemEvent) {
-	          //AbstractButton rdbtnCirque = (AbstractButton)itemEvent.getSource();
-	          int state = itemEvent.getStateChange();
-
-	          if (state == ItemEvent.SELECTED) {
-	        	  rdbtnBronze.setVisible(true);
-	        	  rdbtnArgent.setVisible(true);
-	        	  rdbtnOr.setVisible(true);
-	        	  rdbtnDiamant.setVisible(true);
-		      }  
-	          else {
-	        	  rdbtnBronze.setVisible(false);
-	        	  rdbtnArgent.setVisible(false);
-	        	  rdbtnOr.setVisible(false);
-	        	  rdbtnDiamant.setVisible(false);
-	          }
-	        }
-	      };
-	    rdbtnCirque.addItemListener(itemListenerCirque);
 	    
 	    List<Artiste> list = new LinkedList<Artiste>();		
         list = artiste.getAll();
@@ -215,114 +147,156 @@ public class CreationSpectacle extends JFrame {
         }
 		
 	    
-        JButton btnCrerSpectacle = new JButton("CREER SPECTACLE");
+	    JButton btnCrerSpectacle = new JButton("CREER SPECTACLE");
 	    btnCrerSpectacle.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		if(rdbtnDebout.isSelected()) {
-	    			if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty()) {
+	    			if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty() || textFieldDescription.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
 					}
-	    			if(textPlaceParClient.getText().isEmpty()) {
-	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), 0);
-					}
-	    			else
-						spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
-					
-    				if(spectacle.add(spectacle)) {
-    					double prixLoca = res.prixLocation(plan);
-		    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
-		    			res.add(res);		    			
-		    			plan.setIdReservation(res.getIdReservation());
-		    			plan.Update(plan);		    						    			
-		    			config = new Configuration("Debout", "place debout", spectacle.getIdSpectacle());
-		    			config.add(config);
-	    				double prix = numeroEntre;
-	    				cat = new Categorie(config.getType(), prix, 8000, 8000, config.getIdConfiguration());
-		    			cat.add(cat);		    						    			
-		    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
-					    frame.setLocationRelativeTo(null);
-					    frame.setVisible(true);  
-					    dispose();
-    				}	
-    				else
-    					JOptionPane.showMessageDialog(null, "Echec création !");
-	    			
+	    			else if(textPlaceParClient.getText().isEmpty()) {
+	    				saisiePlace = 0;
+	    			}
+	    			else {
+	    				saisiePlace = Integer.parseInt(textPlaceParClient.getText());
+	    				config = new Configuration("Debout", "Place debout");
+	    				if(config.add()) {
+	    					spectacle = new Spectacle(plan, txtTitre.getText(),textFieldDescription.getText(), saisiePlace, config);
+		    				if(spectacle.add()) {
+		    					double prixLoca = plan.prixLocation();
+				    			res = new Reservation(orga, 0.0,0.0,"",prixLoca);
+				    			if(res.add()) {
+				    				plan.setReservation(res);
+					    			plan.Update();		    						    			
+				    				double prix = numeroEntre;
+				    				cat = new Categorie(config.getType(), prix, 8000, saisiePlace, config);
+				    				if(cat.add()) {
+				    					ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
+									    frame.setLocationRelativeTo(null);
+									    frame.setVisible(true);  
+									    dispose();
+				    				}
+				    				else
+				    					JOptionPane.showMessageDialog(null, "Echec categorie !");
+			    				}	
+			    				else
+			    					JOptionPane.showMessageDialog(null, "Echec reservation !");
+				    			}
+		    				else
+		    					JOptionPane.showMessageDialog(null, "Echec spectacle !");
+	    				}
+	    				else
+	    					JOptionPane.showMessageDialog(null, "Echec configuration !");
+	    			}
+	    				
 	    		}
 	    		
 				if(rdbtnConcert.isSelected()) {	//TODO dans le if avec les verif, ajoutet categorie,...
-					if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty()) {
+					if(textFieldBronze.getText().isEmpty() || textFieldArgent.getText().isEmpty() || textFieldOr.getText().isEmpty() || txtTitre.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
-					}				
-					if(textPlaceParClient.getText().isEmpty()) {
-	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), 0);
-					}
-	    			else
-						spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);
-						
-    				if(spectacle.add(spectacle)) {
-    					double prixLoca = res.prixLocation(plan);
-		    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
-		    			res.add(res);		    			
-		    			plan.setIdReservation(res.getIdReservation());
-		    			plan.Update(plan);		    						    			
-		    			config = new Configuration("Concert", "place assise", spectacle.getIdSpectacle());
-		    			config.add(config);
-		    			double prix = numeroEntre;
-		    			cat = new Categorie("Bronze", prix, 3000, 3000, config.getIdConfiguration());
-		    			cat.add(cat);
-		    			cat = new Categorie("Argent", prix*1.10, 1500, 1500, config.getIdConfiguration());
-		    			cat.add(cat);
-		    			cat = new Categorie("Or", prix*1.20, 500, 500, config.getIdConfiguration());
-		    			cat.add(cat);	    			
-		    			
-		    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
-					    frame.setLocationRelativeTo(null);
-					    frame.setVisible(true);  
-					    dispose();
-		    			
-		    			JOptionPane.showMessageDialog(null, "Spectacle créé avec succès !");
-    				}	
-    				else
-    					JOptionPane.showMessageDialog(null, "Echec création !");				
+					}	
+					else if(textPlaceParClient.getText().isEmpty()) {
+	    				saisiePlace = 0;
+	    			}
+	    			else {
+	    				saisiePlace = Integer.parseInt(textPlaceParClient.getText());
+	    				config = new Configuration("Concert", "Place concert");
+	    				if(config.add()) {
+	    					spectacle = new Spectacle(plan, txtTitre.getText(),textFieldDescription.getText(), saisiePlace, config);
+		    				if(spectacle.add()) {
+		    					double prixLoca = plan.prixLocation();
+				    			res = new Reservation(orga, 0.0,0.0,"",prixLoca);
+				    			if(res.add()) {
+				    				boolean erreur = false;
+				    				plan.setReservation(res);
+					    			plan.Update();	
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldBronze.getText()), 3000, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldArgent.getText()), 1500, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldOr.getText()), 500, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				if(!erreur) {
+				    					ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
+									    frame.setLocationRelativeTo(null);
+									    frame.setVisible(true);  
+									    dispose();
+				    				}
+				    				else
+				    					JOptionPane.showMessageDialog(null, "Echec categorie !");
+			    				}	
+			    				else
+			    					JOptionPane.showMessageDialog(null, "Echec reservation !");
+				    			}
+		    				else
+		    					JOptionPane.showMessageDialog(null, "Echec spectacle !");
+	    				}
+	    				else
+	    					JOptionPane.showMessageDialog(null, "Echec configuration !");
+	    			}
 				}
 				
 				if(rdbtnCirque.isSelected()) {
-					if(txtPrix.getText().isEmpty() || txtTitre.getText().isEmpty()) {
+					if(textFieldBronze.getText().isEmpty() || textFieldArgent.getText().isEmpty() || textFieldOr.getText().isEmpty() || textFieldDiamant.getText().isEmpty() || txtTitre.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
 					}
-					if(textPlaceParClient.getText().isEmpty()) {
-	    				spectacle = new Spectacle(plan.getId(), txtTitre.getText(), 0);
-					}
-	    			else
-						spectacle = new Spectacle(plan.getId(), txtTitre.getText(), saisiePlace);				
-    				if(spectacle.add(spectacle)) {
-    					double prixLoca = res.prixLocation(plan);
-		    			res = new Reservation(0.0,0.0,"",prixLoca,orga.getId());
-		    			res.add(res);		    			
-		    			plan.setIdReservation(res.getIdReservation());
-		    			plan.Update(plan);
-						config = new Configuration("Cirque", "place assise", spectacle.getIdSpectacle());
-		    			config.add(config);
-		    			double prix = numeroEntre;
-		    			cat = new Categorie("Bronze", prix, 1500, 1500, config.getIdConfiguration());
-		    			cat.add(cat);
-		    			cat = new Categorie("Argent", prix*1.10, 1500, 1500, config.getIdConfiguration());
-		    			cat.add(cat);
-		    			cat = new Categorie("Or", prix*1.25, 2000, 2000, config.getIdConfiguration());
-		    			cat.add(cat);	
-		    			cat = new Categorie("Diamant", prix*1.50, 1000, 1000, config.getIdConfiguration());
-		    			cat.add(cat);	
-		    			
-		    			ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
-					    frame.setLocationRelativeTo(null);
-					    frame.setVisible(true);  
-					    dispose();
-		    			
-		    			JOptionPane.showMessageDialog(null, "Spectacle créé avec succès !");
-    				}	
-    				else
-    					JOptionPane.showMessageDialog(null, "Echec création !");
-    			}
+					else if(textPlaceParClient.getText().isEmpty()) {
+	    				saisiePlace = 0;
+	    			}
+	    			else {
+	    				saisiePlace = Integer.parseInt(textPlaceParClient.getText());
+	    				config = new Configuration("Cirque", "Place cirque");
+	    				if(config.add()) {
+	    					spectacle = new Spectacle(plan, txtTitre.getText(),textFieldDescription.getText(), saisiePlace, config);
+		    				if(spectacle.add()) {
+		    					double prixLoca = plan.prixLocation();
+				    			res = new Reservation(orga, 0.0,0.0,"",prixLoca);
+				    			if(res.add()) {
+				    				boolean erreur = false;
+				    				plan.setReservation(res);
+					    			plan.Update();	
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldBronze.getText()), 1500, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldArgent.getText()), 1500, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldOr.getText()), 2000, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				cat = new Categorie(config.getType(), Integer.parseInt(textFieldDiamant.getText()), 1000, saisiePlace, config);
+				    				if(!cat.add()) {
+				    					erreur = true;
+				    				}
+				    				if(!erreur) {
+				    					ValidationSpectacle frame = new ValidationSpectacle(spectacle, plan);
+									    frame.setLocationRelativeTo(null);
+									    frame.setVisible(true);  
+									    dispose();
+				    				}
+				    				else
+				    					JOptionPane.showMessageDialog(null, "Echec categorie !");
+			    				}	
+			    				else
+			    					JOptionPane.showMessageDialog(null, "Echec reservation !");
+				    			}
+		    				else
+		    					JOptionPane.showMessageDialog(null, "Echec spectacle !");
+	    				}
+	    				else
+	    					JOptionPane.showMessageDialog(null, "Echec configuration !");
+	    			}
+	    		}
+						
 	    	}
 	    });
 	    btnCrerSpectacle.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
@@ -333,7 +307,7 @@ public class CreationSpectacle extends JFrame {
 	    lblNewLabel_8.setBounds(409, 181, 158, 14);
 	    contentPane.add(lblNewLabel_8);
 	    
-	    JLabel lblNewLabel_10 = new JLabel("Prix place basique :");
+	    lblNewLabel_10 = new JLabel("Prix place basique :");
 	    lblNewLabel_10.setFont(new Font("Tahoma", Font.BOLD, 18));
 	    lblNewLabel_10.setBounds(159, 215, 182, 19);
 	    contentPane.add(lblNewLabel_10);
@@ -363,11 +337,6 @@ public class CreationSpectacle extends JFrame {
 	    lblNewLabel_11.setBounds(202, 73, 242, 14);
 	    contentPane.add(lblNewLabel_11);
 	    
-	    JLabel lblNewLabel_12 = new JLabel("Sous-cat\u00E9gorie :");
-	    lblNewLabel_12.setFont(new Font("Tahoma", Font.BOLD, 18));
-	    lblNewLabel_12.setBounds(6, 340, 169, 20);
-	    contentPane.add(lblNewLabel_12);
-	    
 	    JButton btnQuitter = new JButton("QUITTER");
 	    btnQuitter.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
@@ -375,7 +344,7 @@ public class CreationSpectacle extends JFrame {
 	    		System.exit(0);
 	    	}
 	    });
-	    btnQuitter.setBounds(537, 461, 102, 30);
+	    btnQuitter.setBounds(539, 463, 102, 30);
 	    contentPane.add(btnQuitter);
 	    
 	    JLabel lblNewLabel_3 = new JLabel("Qtt\u00E9 places par Client :");
@@ -387,6 +356,72 @@ public class CreationSpectacle extends JFrame {
 	    textPlaceParClient.setBounds(409, 252, 109, 20);
 	    contentPane.add(textPlaceParClient);
 	    textPlaceParClient.setColumns(10);
+	    
+	    JLabel lblNewLabel_2_1 = new JLabel("Description du spectacle :");
+	    lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 18));
+	    lblNewLabel_2_1.setBounds(633, 296, 259, 19);
+	    contentPane.add(lblNewLabel_2_1);
+	    
+	    textFieldDescription = new JTextField();
+	    textFieldDescription.setBounds(633, 326, 259, 19);
+	    contentPane.add(textFieldDescription);
+	    textFieldDescription.setColumns(10);
+	    
+	    lblNewLabel_5 = new JLabel("Bronze :");
+	    lblNewLabel_5.setBounds(10, 370, 46, 14);
+	    lblNewLabel_5.setVisible(false);
+	    contentPane.add(lblNewLabel_5);
+	    
+	    lblNewLabel_5_1 = new JLabel("Argent :");
+	    lblNewLabel_5_1.setBounds(10, 392, 46, 14);
+	    lblNewLabel_5_1.setVisible(false);
+	    contentPane.add(lblNewLabel_5_1);
+	    
+	    lblNewLabel_5_2 = new JLabel("Or :");
+	    lblNewLabel_5_2.setBounds(10, 414, 46, 14);
+	    lblNewLabel_5_2.setVisible(false);
+	    contentPane.add(lblNewLabel_5_2);
+	    
+	    lblNewLabel_5_2_1 = new JLabel("Diamant :");
+	    lblNewLabel_5_2_1.setBounds(10, 439, 46, 14);
+	    lblNewLabel_5_2_1.setVisible(false);
+	    contentPane.add(lblNewLabel_5_2_1);
+	    
+	    textFieldBronze = new JTextField();
+	    textFieldBronze.setBounds(66, 367, 109, 17);
+	    textFieldBronze.setVisible(false);
+	    contentPane.add(textFieldBronze);
+	    textFieldBronze.setColumns(10);
+	    
+	    textFieldArgent = new JTextField();
+	    textFieldArgent.setBounds(66, 389, 109, 17);
+	    textFieldArgent.setVisible(false);
+	    contentPane.add(textFieldArgent);
+	    textFieldArgent.setColumns(10);
+	    
+	    textFieldOr = new JTextField();
+	    textFieldOr.setBounds(66, 411, 109, 17);
+	    textFieldOr.setVisible(false);
+	    contentPane.add(textFieldOr);
+	    textFieldOr.setColumns(10);
+	    
+	    textFieldDiamant = new JTextField();
+	    textFieldDiamant.setBounds(66, 439, 109, 21);
+	    textFieldDiamant.setVisible(false);
+	    contentPane.add(textFieldDiamant);
+	    textFieldDiamant.setColumns(10);
+	    
+	    JButton btnRetour = new JButton("Retour");
+	    btnRetour.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		EspaceOrganisateur frame = new EspaceOrganisateur(orga);
+			    frame.setLocationRelativeTo(null);
+			    frame.setVisible(true);  
+			    dispose();
+	    	}
+	    });
+	    btnRetour.setBounds(396, 467, 89, 23);
+	    contentPane.add(btnRetour);
 	    
 	    textPlaceParClient.addKeyListener(new java.awt.event.KeyAdapter() {
 
@@ -404,38 +439,63 @@ public class CreationSpectacle extends JFrame {
 	    afficherPrixLocation(plan);
 	}
 	
-	private void afficherPrixLocation(PlanningSalle prix) {
-		if(prix == null) {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if(e.getStateChange() == ItemEvent.SELECTED){
+				Object source = e.getSource();
+				if(source == rdbtnDebout) {
+						lblNewLabel_5.setVisible(false);
+		    			lblNewLabel_5_1.setVisible(false);
+		    			lblNewLabel_5_2.setVisible(false);
+		    			lblNewLabel_5_2_1.setVisible(false);
+		    			textFieldBronze.setVisible(false);
+		    			textFieldArgent.setVisible(false);
+		    			textFieldOr.setVisible(false);
+		    			textFieldDiamant.setVisible(false);
+		    			lblNewLabel_10.setVisible(true);
+		    			txtPrix.setVisible(true);
+				}
+				else if(source == rdbtnConcert) {
+						lblNewLabel_5.setVisible(true);
+		    			lblNewLabel_5_1.setVisible(true);
+		    			lblNewLabel_5_2.setVisible(true);
+		    			lblNewLabel_5_2_1.setVisible(false);
+		    			textFieldBronze.setVisible(true);
+		    			textFieldArgent.setVisible(true);
+		    			textFieldOr.setVisible(true);
+		    			textFieldDiamant.setVisible(false);
+		    			lblNewLabel_10.setVisible(false);
+		    			txtPrix.setVisible(false);
+				}
+				else {
+						lblNewLabel_5.setVisible(true);
+		    			lblNewLabel_5_1.setVisible(true);
+		    			lblNewLabel_5_2.setVisible(true);
+		    			lblNewLabel_5_2_1.setVisible(true);
+		    			textFieldBronze.setVisible(true);
+		    			textFieldArgent.setVisible(true);
+		    			textFieldOr.setVisible(true);
+		    			textFieldDiamant.setVisible(true);
+		    			lblNewLabel_10.setVisible(false);
+		    			txtPrix.setVisible(false);
+				}
+			}
+			
+		}
+	
+	private void afficherPrixLocation(PlanningSalle plan) {
+		if(plan == null) {
 			JLabel lblMontantLocation = new JLabel("0");
 		    lblMontantLocation.setBounds(212, 108, 46, 14);
 		    contentPane.add(lblMontantLocation);
 		}
 		else {
-			double prixLocation = res.prixLocation(prix);
+			double prixLocation = plan.prixLocation();
 			String prixLocaString = "" + prixLocation;
 			
 			JLabel lblMontantLocation = new JLabel(prixLocaString);
 		    lblMontantLocation.setBounds(212, 108, 46, 14);
 		    contentPane.add(lblMontantLocation);
-		}	
-	}
-	
-	private int selectionCategorie() {
-		if(rdbtnConcert.isSelected() && rdbtnBronze.isSelected())
-			return 1;
-		if(rdbtnConcert.isSelected() && rdbtnArgent.isSelected())
-			return 2;
-		if(rdbtnConcert.isSelected() && rdbtnOr.isSelected())
-			return 3;
-		if(rdbtnCirque.isSelected() && rdbtnBronze.isSelected())
-			return 4;
-		if(rdbtnCirque.isSelected() && rdbtnArgent.isSelected())
-			return 5;
-		if(rdbtnCirque.isSelected() && rdbtnOr.isSelected())
-			return 6;
-		if(rdbtnCirque.isSelected() && rdbtnDiamant.isSelected())
-			return 7;
-		
-		return 0;
+		}		
 	}
 }

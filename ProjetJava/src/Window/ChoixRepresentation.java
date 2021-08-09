@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import POJO.Client;
+import POJO.Commande;
 import POJO.PlanningSalle;
 import POJO.Representation;
 import POJO.Spectacle;
@@ -26,7 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ChoixRepresentation extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JScrollPane scrollPane;
 	private DefaultListModel<Representation> listModel = new DefaultListModel<>();
@@ -44,7 +46,7 @@ public class ChoixRepresentation extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ChoixRepresentation(Spectacle spectacle) {
+	public ChoixRepresentation(Spectacle spectacle, Client client) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1027, 587);
 		contentPane = new JPanel();
@@ -73,8 +75,6 @@ public class ChoixRepresentation extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		
-		//affichageListe();
-		
 		repre = new Representation();
 		List<Representation> list = new LinkedList<Representation>();		
         list = repre.getRepresentationDuSpectacle(spectacle.getIdSpectacle());
@@ -97,9 +97,8 @@ public class ChoixRepresentation extends JFrame {
 				}
 				else {
 					String s = (String) listeRepresentations.getSelectedValue().toString();
-		            Representation dataToOtherFRame = listeRepresentations.getSelectedValue();
-		           
-	            	CommandeClient frame = new CommandeClient(dataToOtherFRame, spectacle);
+		            Representation dataToOtherFRame = listeRepresentations.getSelectedValue();    
+	            	CommandeClient frame = new CommandeClient(dataToOtherFRame, spectacle, client);
 				    frame.setLocationRelativeTo(null);
 				    frame.setVisible(true);  
 				    dispose();
@@ -113,7 +112,7 @@ public class ChoixRepresentation extends JFrame {
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Accueil frame = new Accueil();
+				EspaceClient frame = new EspaceClient(client);
 			    frame.setLocationRelativeTo(null);
 			    frame.setVisible(true);  
 			    dispose();
