@@ -20,14 +20,19 @@ public class PersonneDAO extends DAO<Personne>{
         {
             //Statement state = connect.createStatement(); // Solution via google ==> Qui ne marche pas car problème avec les valeurs ==> reçoit une erreur car il confond les champs
             //state.executeUpdate("INSERT INTO Personne(Num_pers, Nom, Prenom, Sexe, Age, Pays) VALUES(id, nom, prenom, sexe, age, pays)"); // Dans values les données en paramètre/
-            PreparedStatement state = connect.prepareStatement("INSERT INTO Personne(nom, prenom, adresse, telephone, pseudo, password) VALUES (?,?,?,?,?,?)");
+            PreparedStatement state = connect.prepareStatement("INSERT INTO Personne(nom, prenom, adresse, password, email, role) VALUES (?,?,?,?,?,?)");
             state.setString(1, obj.getNom());
             state.setString(2, obj.getPrenom());
             state.setString(3, obj.getAdresse());
-            state.setString(4, obj.getTelephone());
-            state.setString(5, obj.getPseudo());
-            state.setString(6, obj.getPassword());
+            state.setString(4, obj.getPassword());
+            state.setString(5, obj.getEmail());
+            state.setString(6, obj.getRole());
             state.execute();
+            ResultSet rs = state.getGeneratedKeys();
+            if(rs.next()) {
+                int id = rs.getInt(1);
+                obj.setId(id);
+            }
             return true;
         }
 
@@ -39,30 +44,41 @@ public class PersonneDAO extends DAO<Personne>{
         return false;
     }
     
- // Vérification de la présence d'un pseudo déjà existant dans la table personne
-    public boolean VerifTel(String telephone) {
-        try {
-            String sql ="SELECT * FROM Personne WHERE telephone ='"+telephone+"'";
-            ResultSet result = this.connect.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
-            if(result.next())
-                return true;
+     
+    @Override
+    public boolean delete(Personne obj){
+    	try
+        {
+            PreparedStatement state = connect.prepareStatement("DELETE FROM Personne WHERE id = ?");
+            state.setInt(1, obj.getId());
+            state.execute();
+            return true;
         }
-        catch(SQLException e) {
+
+        catch(SQLException e)
+        {
             e.printStackTrace();
         }
 
         return false;
     }
-    
-    @Override
-    public boolean delete(Personne obj){
-        return false;
-    }
 
     @Override
     public boolean update(Personne obj){
+    	try {
+            PreparedStatement state = connect.prepareStatement("UPDATE Personne SET nom =?, prenom =?, adresse =?, password =?, email =?, role =? WHERE id = " + obj.getId());
+            state.setString(1, obj.getNom());
+            state.setString(2, obj.getPrenom());
+            state.setString(3, obj.getAdresse());
+            state.setString(4, obj.getPassword());
+            state.setString(5, obj.getEmail());
+            state.setString(6, obj.getRole());
+            state.executeUpdate();
+            return true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
