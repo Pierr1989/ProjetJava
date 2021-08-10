@@ -15,6 +15,7 @@ import POJO.Gestionnaire;
 import POJO.PlanningSalle;
 
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -28,7 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class EspaceGestionnaire extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Gestionnaire gest;
 	private Date  day; 
@@ -68,10 +69,18 @@ public class EspaceGestionnaire extends JFrame {
 		lblNewLabel_1.setBounds(40, 105, 262, 30);
 		contentPane.add(lblNewLabel_1);
 		
-		JButton btnNewButton = new JButton("Voir les spectacles r\u00E9serv\u00E9s");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnNewButton.setBounds(40, 340, 199, 23);
-		contentPane.add(btnNewButton);
+		JButton btnVoirSpectacle = new JButton("Voir les spectacles");
+		btnVoirSpectacle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListeDesSpectacles frame = new ListeDesSpectacles();
+			    frame.setLocationRelativeTo(null);
+			    frame.setVisible(true);  
+			    dispose();
+			}
+		});
+		btnVoirSpectacle.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnVoirSpectacle.setBounds(40, 281, 199, 23);
+		contentPane.add(btnVoirSpectacle);
 		
 		JButton btnNewButton_2 = new JButton("Quitter");
 		btnNewButton_2.addActionListener(new ActionListener() {
@@ -81,11 +90,6 @@ public class EspaceGestionnaire extends JFrame {
 		});
 		btnNewButton_2.setBounds(393, 464, 89, 23);
 		contentPane.add(btnNewButton_2);
-		
-		JButton btnAnnulerDateDispo = new JButton("Annuler date disponible");
-		btnAnnulerDateDispo.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnAnnulerDateDispo.setBounds(554, 340, 199, 23);
-		contentPane.add(btnAnnulerDateDispo);
 		
 		
 		JLabel lblNewLabel_2 = new JLabel("Ajouter date disponible :");
@@ -109,19 +113,36 @@ public class EspaceGestionnaire extends JFrame {
 				else {
 					java.util.Date day = new java.util.Date();
 					day = dateChooser.getDate();
-					dayPlusUn = day;
-					Calendar c = Calendar.getInstance();
-					c.setTime(dayPlusUn);
-					c.add(Calendar.DATE, 1);
-					dayPlusUn = c.getTime();
-					
-					java.sql.Date date_sql = new java.sql.Date(day.getTime());
-					java.sql.Date date_sqlPusUn = new java.sql.Date(dayPlusUn.getTime());
+                    Date dayReserved = day;
+                    Date dayAfter = day;
+                    Calendar c = Calendar.getInstance();
+                    Calendar t = Calendar.getInstance();
+                    t.setTime(dayReserved);
+                    c.setTime(dayAfter);
+                    c.add(Calendar.DATE, 1);
 
-					planningS = new PlanningSalle(date_sql,date_sqlPusUn,gest.getId(), 4, false);
+                    t.setTime(day);
+                    t.set( Calendar.HOUR_OF_DAY, 12 ); // Plage horaire de 12h jour j à 12h jour j+1
+                    t.set( Calendar.MINUTE, 0 );
+                    t.set( Calendar.SECOND, 0 );
+                    t.set( Calendar.MILLISECOND, 0 );
+
+                    c.set( Calendar.HOUR_OF_DAY, 12 );
+                    c.set( Calendar.MINUTE, 0 );
+                    c.set( Calendar.SECOND, 0 );
+                    c.set( Calendar.MILLISECOND, 0 );
+
+                    dayReserved = t.getTime();
+                    dayAfter = c.getTime();   
+                    
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+                    String strDayReserved = dateFormat.format(dayReserved);
+                    String strDayAfter = dateFormat.format(dayAfter);
+
+					planningS = new PlanningSalle(strDayReserved, strDayAfter, gest, null, false);
 					
 					if(planningS.checkDate(planningS)) {
-						JOptionPane.showMessageDialog(null, "Date déjà réservée, dommage !");
+						JOptionPane.showMessageDialog(null, "Date déjà réservée !");
 					}
 					else if(dateChooserFormated.before(dateToday)) {
 						JOptionPane.showMessageDialog(null, "Date antérieur !");

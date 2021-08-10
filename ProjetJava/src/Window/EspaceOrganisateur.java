@@ -1,48 +1,30 @@
 package Window;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import POJO.Artiste;
-import POJO.Client;
 import POJO.Organisateur;
 import POJO.PlanningSalle;
 
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollBar;
-
 public class EspaceOrganisateur extends JFrame  {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Organisateur orga;
 	private PlanningSalle planningS = new PlanningSalle();
@@ -79,7 +61,7 @@ public class EspaceOrganisateur extends JFrame  {
 		
 		initierFrame(orga);		
 
-		JLabel lblNewLabel = new JLabel("Salut, orga appel\u00E9 : ");
+		JLabel lblNewLabel = new JLabel("Salut : ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(214, 11, 195, 14);
 		contentPane.add(lblNewLabel);
@@ -113,6 +95,14 @@ public class EspaceOrganisateur extends JFrame  {
 				contentPane.add(btnAccueil);
 		
 		JButton btnNewButton_3 = new JButton("Editer les informations du compte");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EditionOrganisateur frame = new EditionOrganisateur(orga);
+			    frame.setLocationRelativeTo(null);
+			    frame.setVisible(true);  
+			    dispose();
+			}
+		});
 		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnNewButton_3.setBounds(681, 50, 233, 23);
 		contentPane.add(btnNewButton_3);
@@ -137,16 +127,11 @@ public class EspaceOrganisateur extends JFrame  {
 						JOptionPane.showMessageDialog(null, "Veuillez sélectionner une plage horaire !");
 					}
 					else {
-						String s = (String) listeDatesDispo.getSelectedValue().toString();
 			            PlanningSalle dataToOtherFRame = listeDatesDispo.getSelectedValue();
-			            if(dataToOtherFRame.Update(dataToOtherFRame)) {
-			            	CreationSpectacle frame = new CreationSpectacle(dataToOtherFRame, orga);
-						    frame.setLocationRelativeTo(null);
-						    frame.setVisible(true);  
-						    dispose();
-			            }
-			            else
-			            	JOptionPane.showMessageDialog(null, "Update ratée !");
+		            	CreationSpectacle frame = new CreationSpectacle(dataToOtherFRame, orga);
+					    frame.setLocationRelativeTo(null);
+					    frame.setVisible(true);  
+					    dispose();
 					}              
 			}
 		});
