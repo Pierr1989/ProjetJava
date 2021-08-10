@@ -1,6 +1,7 @@
 package POJO;
 
 import java.io.Serializable;
+import java.util.List;
 
 import DAO.BosquetConnection;
 import DAO.PersonneDAO;
@@ -11,35 +12,32 @@ public abstract class Personne implements Serializable{
     protected String nom = "";
     protected String prenom = "";
     protected String adresse ="";
-    protected String telephone = "";
-    protected String pseudo ="";
     protected String password ="";
+    protected String email ="";
+    protected String role ="";
+    protected PersonneDAO DAO = new PersonneDAO(BosquetConnection.getInstance());
     
     public Personne() {
     	
     }
     
-    public Personne(String nom) {
-        this.nom = nom;
-    }
-    
-    public Personne(int id,String nom, String prenom, String adresse, String telephone, String pseudo, String password) {
+    public Personne(int id,String nom, String prenom, String adresse, String password, String email, String role) {
     	this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
-        this.telephone = telephone;
-        this.pseudo = pseudo;
         this.password = password;
+        this.email = email;
+        this.role = role;
     }
     
-    public Personne(String nom, String prenom, String adresse, String telephone, String pseudo, String password) {
+    public Personne(String nom, String prenom, String adresse, String password, String email, String role) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
-        this.telephone = telephone;
-        this.pseudo = pseudo;
         this.password = password;
+        this.email = email;
+        this.role = role;
     }
 
     public int getId() {
@@ -48,6 +46,22 @@ public abstract class Personne implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getNom() {
@@ -74,22 +88,6 @@ public abstract class Personne implements Serializable{
         this.adresse = adresse;
     }
     
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-    
-    public String getPseudo() {
-        return pseudo;
-    }
-
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
-    }
-    
     public String getPassword() {
         return password;
     }
@@ -97,14 +95,3 @@ public abstract class Personne implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    @Override
-    public String toString() { 
-        return String.format(nom + " " + prenom); 
-    }
-    
-    public boolean VerifTel(String telephone) {
-    	PersonneDAO DAO = new PersonneDAO(BosquetConnection.getInstance());
-		return DAO.VerifTel(telephone);
-    }
-}

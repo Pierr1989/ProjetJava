@@ -1,23 +1,19 @@
 package POJO;
 
-
-import java.util.LinkedList;
 import java.util.List;
 
 import DAO.BosquetConnection;
-import DAO.DAO;
 import DAO.PlanningSalleDAO;
 import DAO.ReservationDAO;
 
 public class Reservation {
 	/*Attributs*/
 	private int idReservation;
-	private int idOrganisateur;
+	private Organisateur organisateur;
 	private double acompte = 0;	//à zéro de base, à implémenter par la suite car optionnel
 	private double solde;
 	private String statut;
 	private double prix;
-	List<PlanningSalle> listePlanningSalle;
 	ReservationDAO DAO = new ReservationDAO(BosquetConnection.getInstance());
 	PlanningSalleDAO DAOPlanning = new PlanningSalleDAO(BosquetConnection.getInstance());
 	
@@ -26,23 +22,21 @@ public class Reservation {
 		
 	}
 	
-	public Reservation(double acompte, double solde, String statut, double prix, int idOrganisateur) {
+	public Reservation(Organisateur organisateur, double acompte, double solde, String statut, double prix) {
 		this.acompte = acompte;
 		this.solde = solde;
-		listePlanningSalle = new LinkedList<PlanningSalle>();
 		this.statut = statut;
 		this.prix = prix;
-		this.idOrganisateur = idOrganisateur;
+		this.organisateur = organisateur;
 	}
 	
-	public Reservation(int idReservation, double acompte, double solde, String statut, double prix, int idOrganisateur) {
+	public Reservation(int idReservation, Organisateur organisateur, double acompte, double solde, String statut, double prix) {
 		this.idReservation = idReservation;
 		this.acompte = acompte;
 		this.solde = solde;
-		listePlanningSalle = new LinkedList<PlanningSalle>();
 		this.statut = statut;
 		this.prix = prix;
-		this.idOrganisateur = idOrganisateur;
+		this.organisateur = organisateur;
 	}
 	
 	
@@ -53,21 +47,15 @@ public class Reservation {
     public void setIdReservation(int idReservation) {
         this.idReservation = idReservation;
     }
-    
-    public int  getIdOrganisateur() {
-        return idOrganisateur;
-    }
-    public void setIdOrganisateur(int idOrganisateur) {
-        this.idOrganisateur = idOrganisateur;
-    }
-	
-    public List<PlanningSalle>  getListArtiste() {
-        return listePlanningSalle;
-    }
-    public void setListePlanningSalle(List<PlanningSalle> listePlanningSalle) {
-        this.listePlanningSalle = listePlanningSalle;
-    }
-	
+
+	public Organisateur getOrganisateur() {
+		return organisateur;
+	}
+
+	public void setOrganisateur(Organisateur organisateur) {
+		this.organisateur = organisateur;
+	}
+
 	public double  getAcompte() {
         return acompte;
     }
@@ -97,23 +85,3 @@ public class Reservation {
     public void setPrix(double prix) {
         this.prix = prix;
     }
-	
-	
-	/*METHODES*/
-    public boolean add(Reservation res) {
-		ReservationDAO DAO = new ReservationDAO(BosquetConnection.getInstance());
-		return DAO.create(res);	
-	}
-    
-    public List<Reservation> getAll() {
-    	return DAO.getAll();
-    }
-    
-    public double prixLocation(PlanningSalle prixPlan) {
-    	if(prixPlan.getDateDebutR().getDay() == 5 || prixPlan.getDateDebutR().getDay() == 6) {
-    		return 4500;
-    	}
-    	return 3000;
-    }
-    
-}
