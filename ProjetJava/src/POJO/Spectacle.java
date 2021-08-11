@@ -143,6 +143,7 @@ public class Spectacle {
     public boolean delete() {
         return DAOspec.delete(this);
     }
+
     
     public List<Artiste> getArtisteDuSPectacle(){
     	listeArtiste = new LinkedList<Artiste>();

@@ -85,3 +85,16 @@ public class Reservation {
     public void setPrix(double prix) {
         this.prix = prix;
     }
+    /*METHODES*/
+    public boolean add() {
+		return DAO.create(this);	
+	}
+    
+    public boolean delete() {
+    	return DAO.delete(this);
+    }
+    
+    public List<Reservation> getAll() {
+    	return DAO.getAll();
+    }
+}

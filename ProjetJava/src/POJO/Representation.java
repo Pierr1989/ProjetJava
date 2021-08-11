@@ -83,3 +83,38 @@ public class Representation {
     public void setHeureFin(String heureFin) {
         this.heureFin = heureFin;
     }
+    
+	
+	/*METHODES*/
+    public boolean add(Representation repre) {
+		return DAO.create(repre);	
+	}
+    
+	public List<PlanningSalle> ChoixPlageHoraire(){
+		
+		return null;
+	}
+	
+	@Override
+    public String toString() { 
+		String.format("[%1$.10s]", date);
+        return String.format("Date-Heure : " + date + "  -   " + heureDebut + " - " + heureFin); 
+    }
+	
+	public List<Representation> getAll(){
+		return DAO.getAll();
+    }
+	
+	public List<Representation> getRepresentationDuSpectacle(int idSpec) {
+		List<Representation> listToutesRep = new LinkedList<Representation>();
+		listToutesRep = DAO.getAll();
+		List<Representation> listRepSpec = new LinkedList<Representation>();
+		for(int i = 0; i<listToutesRep.size(); i++) {
+			if(listToutesRep.get(i).spectacle.getIdSpectacle() == idSpec) {
+				listRepSpec.add(listToutesRep.get(i));
+				//listRepSpec.add(i, listToutesRep.get(i));
+			}
+		}
+		return listRepSpec;
+	}
+}
