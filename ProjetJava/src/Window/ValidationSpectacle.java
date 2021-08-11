@@ -1,36 +1,31 @@
 package Window;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-
-import POJO.Artiste;
-import POJO.PlanningSalle;
-import POJO.Representation;
-import POJO.Spectacle;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import POJO.Artiste;
+import POJO.Organisateur;
+import POJO.PlanningSalle;
+import POJO.Representation;
+import POJO.Spectacle;
 
 public class ValidationSpectacle extends JFrame {
 
@@ -47,6 +42,7 @@ public class ValidationSpectacle extends JFrame {
 	private JCheckBox chckbx2;
 	private JCheckBox chckbx3;
 	private JCheckBox chckbx4;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Launch the application.
@@ -58,7 +54,7 @@ public class ValidationSpectacle extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ValidationSpectacle(Spectacle spectacle, PlanningSalle plan) {
+	public ValidationSpectacle(Spectacle spectacle, PlanningSalle plan, Organisateur orga) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 945, 555);
 		contentPane = new JPanel();
@@ -104,7 +100,7 @@ public class ValidationSpectacle extends JFrame {
 				}
 				else {
 					artisteExistant = true;
-					artiste = new Artiste(textName.getText(), spectacle.getIdSpectacle());
+					artiste = new Artiste("","","","","","Artiste",textName.getText(), spectacle);
 					if(artiste.add(artiste)) {
 						JOptionPane.showMessageDialog(null, "Enregistrement réussi !");	
 						listModel.removeAllElements();
@@ -134,33 +130,25 @@ public class ValidationSpectacle extends JFrame {
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				spectacle.delete(spectacle);
+				if(spectacle.getPlanning().getReservation().delete()) {
+					if(spectacle.getConf().delete()) {
+						if(spectacle.delete()) {
+							Accueil frame = new Accueil();
+						    frame.setLocationRelativeTo(null);
+						    frame.setVisible(true);  
+						    dispose();
+						}
+						else
+							JOptionPane.showMessageDialog(null, "Supression spectacle impossible !");
+					}
+				}
+				else
+					JOptionPane.showMessageDialog(null, "Supression réservation impossible !");
+				
 			}
 		});
 		btnAnnuler.setBounds(357, 448, 89, 23);
 		contentPane.add(btnAnnuler);
-		
-		JButton btnQuitter = new JButton("Quitter");
-		btnQuitter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
-				System.exit(0);
-			}
-		});
-		btnQuitter.setBounds(494, 448, 89, 23);
-		contentPane.add(btnQuitter);
-		
-		JButton btnAcceuil = new JButton("Annuler et retourner \u00E0 l'acceuil");
-		btnAcceuil.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				spectacle.delete(spectacle);
-				Accueil frame = new Accueil();
-			    frame.setLocationRelativeTo(null);
-			    frame.setVisible(true);  
-			    dispose();
-			}
-		});
-		btnAcceuil.setBounds(357, 401, 226, 23);
-		contentPane.add(btnAcceuil);
 		
 		JLabel lblNewLabel_2 = new JLabel("S\u00E9lectionnez les repr\u00E9sentations :");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -192,66 +180,72 @@ public class ValidationSpectacle extends JFrame {
 		chckbx4.setBounds(653, 259, 97, 23);
 		contentPane.add(chckbx4);
 		
-		JButton btnValiderRep = new JButton("Valider");
+		JButton btnValiderRep = new JButton("Valider et terminer");
 		btnValiderRep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(artisteExistant) {
 					if(chckbx1.isSelected()) {						
-						definitionHeure(16, 18, plan, spectacle, plan.getDateDebutR(), 1, 1);
+						definitionHeure(16, 18, plan, spectacle, plan.getDateDebutR());
+						retourAccueil(orga);
 					}
 					if(chckbx2.isSelected()) {
-						definitionHeure(20, 22, plan, spectacle, plan.getDateDebutR(), 1, 2);
+						definitionHeure(20, 22, plan, spectacle, plan.getDateDebutR());
+						retourAccueil(orga);
 					}
 					if(chckbx3.isSelected()) {
-						definitionHeure(8, 10, plan, spectacle, plan.getDateFinR(), 2, 3);
+						definitionHeure(8, 10, plan, spectacle, plan.getDateFinR());
+						retourAccueil(orga);
 					}
 					if(chckbx4.isSelected()) {
-						definitionHeure(10, 12, plan, spectacle, plan.getDateFinR(), 2, 4);
+						definitionHeure(10, 12, plan, spectacle, plan.getDateFinR());
+						retourAccueil(orga);
 					}
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Un artiste doit être ajouté !");
 				}
+				
 			}
 		});
 		btnValiderRep.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnValiderRep.setBounds(754, 243, 89, 23);
+		btnValiderRep.setBounds(754, 243, 165, 23);
 		contentPane.add(btnValiderRep);
 	}
 	
-	private void definitionHeure(int heureDebut, int heureFin, PlanningSalle plan, Spectacle spectacle, Date date, int statut, int numeroRepresentation) {
-		java.util.Date heureDeDebut = new java.util.Date();
-	    java.util.Date heureDeFin = new java.util.Date();	    
-	    
-	    if(statut == 1) {
-	    	heureDeDebut = plan.getDateDebutR();
-		    heureDeFin = plan.getDateDebutR();
-	    }
-	    if(statut == 2) {
-	    	heureDeDebut = plan.getDateFinR();
-		    heureDeFin = plan.getDateFinR();
-	    }
-	    
+	private void definitionHeure(int heureDebut, int heureFin, PlanningSalle plan, Spectacle spectacle, String date) {
+		Calendar calDebut = Calendar.getInstance();
+        Calendar calFin = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        
+        calDebut.set( Calendar.HOUR_OF_DAY, heureDebut );
+        calDebut.set( Calendar.MINUTE, 0 );
+        calDebut.set( Calendar.SECOND, 0 );
+        calDebut.set( Calendar.MILLISECOND, 0 );
 
-		Calendar c = Calendar.getInstance();
-		Calendar t = Calendar.getInstance();
-		t.setTime(heureDeDebut);
-		c.setTime(heureDeFin);
-		
-		t.setTime(heureDeDebut);
-        t.set( Calendar.HOUR_OF_DAY, heureDebut );
-		
-		c.setTime(heureDeFin);
-        c.set( Calendar.HOUR_OF_DAY, heureFin );
-        				              
-        heureDeDebut = c.getTime();
-		heureDeFin = t.getTime();
-		
-		java.sql.Date date_sql_debut = new java.sql.Date(heureDeFin.getTime());
-		java.sql.Date date_sql_fin = new java.sql.Date(heureDeDebut.getTime());	
-		java.sql.Date dateReserve = new java.sql.Date(date.getTime());	
-		
-		representation = new Representation(dateReserve, date_sql_debut, date_sql_fin, spectacle.getIdSpectacle(), 0, numeroRepresentation);
+        calFin.set( Calendar.HOUR_OF_DAY, heureFin );
+        calFin.set( Calendar.MINUTE, 0 );
+        calFin.set( Calendar.SECOND, 0 );
+        calFin.set( Calendar.MILLISECOND, 0 );
+        
+        String hDebut;
+        String hFin;
+	
+		 Date date1;
+		 date1 = calDebut.getTime();
+		 hDebut = dateFormat.format(date1);
+   
+    	 Date date2;
+    	 date2 = calFin.getTime();
+    	 hFin = dateFormat.format(date2);
+	    
+		representation = new Representation(date, hDebut, hFin, spectacle, null);
 	    representation.add(representation);
+	}
+	
+	private void retourAccueil(Organisateur orga) {
+		EspaceOrganisateur frame = new EspaceOrganisateur(orga);
+	    frame.setLocationRelativeTo(null);
+	    frame.setVisible(true);  
+	    dispose();
 	}
 }

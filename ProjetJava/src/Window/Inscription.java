@@ -1,41 +1,48 @@
 package Window;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import com.toedter.calendar.JDateChooser;
 
 import POJO.Client;
 import POJO.Organisateur;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import java.awt.Font;
-
 public class Inscription extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textName;
 	private JTextField textFirstName;
-	private JTextField textPseudo;
+	private JTextField textEmail;
 	private JTextField textTel;
 	private JTextField textAddress;
-	JRadioButton rdBtnClient = new JRadioButton("Client");
-	JRadioButton rdBtnOrganisateur = new JRadioButton("Organisateur");
+	private JRadioButton rdBtnClient = new JRadioButton("Client");
+	private JRadioButton rdBtnOrganisateur = new JRadioButton("Organisateur");
 	private JPasswordField textPassword;
-	Client cli = new Client();
-	Organisateur org = new Organisateur();
-	private long numeroEntre;
-	private String tel;
+	private Organisateur org = new Organisateur();
+	private JComboBox comboGenre;
+	private String[] tabGenre = {"Homme", "Femme", "Autre"};
+	private String genre;
+	private JDateChooser dateChooser = new JDateChooser();
+	private String telRegexp = "^[0-9]{4}[- .]?[0-9]{2}[- .]?[0-9]{2}[- .]?[0-9]{2}$";
 
 	/**
 	 * Launch the application.
@@ -100,7 +107,7 @@ public class Inscription extends JFrame {
 		btnQuitter.setBounds(242, 308, 95, 30);
 		contentPane.add(btnQuitter);
 		
-		JLabel lblNewLabel_6 = new JLabel("Pseudonyme :");
+		JLabel lblNewLabel_6 = new JLabel("Email :");
 		lblNewLabel_6.setBounds(10, 198, 88, 14);
 		contentPane.add(lblNewLabel_6);
 		
@@ -118,41 +125,27 @@ public class Inscription extends JFrame {
 		contentPane.add(btnAccueil);
 		
 		textName = new JTextField();
-		textName.setBounds(89, 92, 86, 20);
+		textName.setBounds(111, 95, 86, 20);
 		contentPane.add(textName);
 		textName.setColumns(10);
 		
 		textFirstName = new JTextField();
-		textFirstName.setBounds(89, 120, 86, 20);
+		textFirstName.setBounds(111, 123, 86, 20);
 		contentPane.add(textFirstName);
 		textFirstName.setColumns(10);
 		
-		textPseudo = new JTextField();
-		textPseudo.setBounds(89, 198, 86, 20);
-		contentPane.add(textPseudo);
-		textPseudo.setColumns(10);
+		textEmail = new JTextField();
+		textEmail.setBounds(111, 201, 86, 20);
+		contentPane.add(textEmail);
+		textEmail.setColumns(10);
 		
 		textTel = new JTextField();
-		textTel.setBounds(89, 145, 86, 20);
+		textTel.setBounds(111, 148, 86, 20);
 		contentPane.add(textTel);
 		textTel.setColumns(10);
 		
-		// Vérification entrée telephone, number only
-				textTel.addKeyListener(new java.awt.event.KeyAdapter() {
-
-		            public void keyReleased(java.awt.event.KeyEvent evt) {
-		                try {
-		                    numeroEntre = Long.parseLong(textTel.getText());
-		                } 
-		                catch (Exception e) {
-		                    JOptionPane.showMessageDialog(rootPane, "Veuillez écrire des nombres !");
-		                    textTel.setText("");
-		                }
-		            }
-		        });
-		
 		textAddress = new JTextField();
-		textAddress.setBounds(89, 170, 86, 20);
+		textAddress.setBounds(111, 173, 86, 20);
 		contentPane.add(textAddress);
 		textAddress.setColumns(10);
 		
@@ -162,19 +155,23 @@ public class Inscription extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if(rdBtnClient.isSelected()) {
-					tel = Long.toString(numeroEntre);
-					if(textName.getText().isEmpty() || textFirstName.getText().isEmpty() || textAddress.getText().isEmpty() || textTel.getText().isEmpty() || textPseudo.getText().isEmpty() || textPassword.getText().isEmpty()) {
+					Client cli = new Client();
+					Date dateChooserFormated = dateChooser.getDate();
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");	
+					if(textName.getText().isEmpty() || textFirstName.getText().isEmpty() || textAddress.getText().isEmpty() || textTel.getText().isEmpty() || textEmail.getText().isEmpty() || textPassword.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
-					}
-					
-					else if(cli.VerifTel("0"+tel)) {
-                        JOptionPane.showMessageDialog(null, "Ce téléphone est déjà lié à un compte existant!");
-                    }
-					
+					}	
+					else if(dateChooser.getDate() == null)
+	                    JOptionPane.showMessageDialog(null, "Date vide !");
+					else if(!textTel.getText().matches(telRegexp))
+	                    JOptionPane.showMessageDialog(null, "Numéro invalide !");
+					else if(cli.checkEmail(textEmail.getText()))
+						JOptionPane.showMessageDialog(null, "Email existant !");
 					else {
-						tel = Long.toString(numeroEntre);
-						cli = new Client(textName.getText(), textFirstName.getText(), textAddress.getText(), "0"+tel, textPseudo.getText(), textPassword.getText());
-						if(cli.add(cli)) {
+						genre = comboGenre.getSelectedItem().toString();
+						String birthdate = dateFormat.format(dateChooserFormated);
+						cli = new Client(textName.getText(), textFirstName.getText(), textAddress.getText(), textPassword.getText(), textEmail.getText(), "Client", textTel.getText(), genre, birthdate);
+						if(cli.add()) {
 							JOptionPane.showMessageDialog(null, "Enregistrement réussi !");		
 							Accueil frame = new Accueil();
 						    frame.setLocationRelativeTo(null);
@@ -187,20 +184,18 @@ public class Inscription extends JFrame {
 					}	
 				}
 				
-				if(rdBtnOrganisateur.isSelected()) {					
-					tel = Long.toString(numeroEntre);
-					if(textName.getText().isEmpty() || textFirstName.getText().isEmpty() || textAddress.getText().isEmpty() || textTel.getText().isEmpty() || textPseudo.getText().isEmpty() || textPassword.getText().isEmpty()) {
+				if(rdBtnOrganisateur.isSelected()) {	
+					Organisateur orga = new Organisateur();
+					if(textName.getText().isEmpty() || textFirstName.getText().isEmpty() || textAddress.getText().isEmpty() || textTel.getText().isEmpty() || textEmail.getText().isEmpty() || textPassword.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Veuillez remplir les champs !");
 					}	
-					
-					else if(org.VerifTel("0"+tel)) {
-                        JOptionPane.showMessageDialog(null, "Ce téléphone est déjà lié à un compte existant!");
-                    }
-					
+					else if(!textTel.getText().matches(telRegexp))
+	                    JOptionPane.showMessageDialog(null, "Numéro invalide !");
+					else if(orga.checkEmail(textEmail.getText()))
+						JOptionPane.showMessageDialog(null, "Email existant !");
 					else {
-						tel = Long.toString(numeroEntre);
-						org = new Organisateur(textName.getText(), textFirstName.getText(), textAddress.getText(), "0"+tel, textPseudo.getText(), textPassword.getText());
-						if(org.add(org)) {							
+						org = new Organisateur(textName.getText(), textFirstName.getText(), textAddress.getText(), textPassword.getText(), textEmail.getText(), "Organisateur", textTel.getText());
+						if(org.add()) {							
 							JOptionPane.showMessageDialog(null, "Enregistrement réussi !");
 							Accueil frame = new Accueil();
 						    frame.setLocationRelativeTo(null);
@@ -218,7 +213,7 @@ public class Inscription extends JFrame {
 		contentPane.add(btnValidate);
 		
 		textPassword = new JPasswordField();
-		textPassword.setBounds(87, 226, 88, 20);
+		textPassword.setBounds(109, 229, 88, 20);
 		contentPane.add(textPassword);
 		rdBtnClient.setSelected(true);
 				
@@ -244,5 +239,22 @@ public class Inscription extends JFrame {
 	    JLabel lblNewLabel_9 = new JLabel("--->");
 	    lblNewLabel_9.setBounds(380, 154, 30, 14);
 	    contentPane.add(lblNewLabel_9);
+	    
+	    JLabel lblNewLabel_10 = new JLabel("Genre (client) :");
+	    lblNewLabel_10.setBounds(10, 295, 72, 14);
+	    contentPane.add(lblNewLabel_10);
+	    
+	    comboGenre = new JComboBox(tabGenre);
+	    comboGenre.setBounds(109, 287, 88, 30);
+	    contentPane.add(comboGenre);
+	    
+	    JLabel lblNewLabel_11 = new JLabel("Date de naissance :");
+	    lblNewLabel_11.setBounds(10, 254, 107, 14);
+	    contentPane.add(lblNewLabel_11);
+	    
+	    dateChooser = new JDateChooser();
+		dateChooser.setBounds(111, 254, 174, 20);
+		contentPane.add(dateChooser);
+		
 	}
 }
