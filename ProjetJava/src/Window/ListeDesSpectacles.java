@@ -31,6 +31,7 @@ public class ListeDesSpectacles extends JFrame {
 	private Spectacle spec;// = new Spectacle();
 	private JList listeSpec;
 	private List<Spectacle> list;
+	private static final long serialVersionUID = 1L;
 	
 
 	/**
@@ -82,6 +83,34 @@ public class ListeDesSpectacles extends JFrame {
 		btnAccueil.setBounds(801, 490, 122, 23);
 		contentPane.add(btnAccueil);
 		
+		// Vers enregistrement client
+		JButton btnEnregistrer = new JButton("S'enregistrer");
+		btnEnregistrer.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 10));
+		btnEnregistrer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Inscription frame = new Inscription();				
+			    frame.setLocationRelativeTo(null);
+			    frame.setVisible(true);  
+			    dispose();
+			}
+		});
+		btnEnregistrer.setBounds(118, 255, 118, 33);
+		contentPane.add(btnEnregistrer);
+		
+		// Bouton de connexion
+		JButton btnConnecter = new JButton("Se connecter");
+		btnConnecter.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnConnecter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Connection frame = new Connection();				
+			    frame.setLocationRelativeTo(null);
+			    frame.setVisible(true);  
+			    dispose();
+			}
+		});
+		btnConnecter.setBounds(251, 255, 122, 33);
+		contentPane.add(btnConnecter);
+		
 		JButton btnQuitter = new JButton("Quitter");
 		btnQuitter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -91,12 +120,16 @@ public class ListeDesSpectacles extends JFrame {
 		btnQuitter.setBounds(407, 490, 89, 23);
 		contentPane.add(btnQuitter);
 		
+		JLabel lblNewLabel_1 = new JLabel("Envie de voir un spectacle? Inscrivez/Connectez-vous d'abord");
+		lblNewLabel_1.setBounds(98, 235, 442, 23);
+		contentPane.add(lblNewLabel_1);
+		
 		//spec = new Spectacle();
 		spec.afficherSpecEtArtiste();
 	}
 	
 	private void AffichageListe() {
-		spec = new Spectacle();
+        spec = new Spectacle();
         listeSpec = new JList();
 
         list = new LinkedList<Spectacle>();
@@ -113,5 +146,4 @@ public class ListeDesSpectacles extends JFrame {
         scrollPane.setBounds(98, 66, 285, 139);
         contentPane.add(scrollPane);
     }
-
 }
