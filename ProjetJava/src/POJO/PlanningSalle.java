@@ -103,3 +103,112 @@ public class PlanningSalle {
     public void setListeSpectacle(List<Spectacle> listeSpectacle) {
         this.listeSpectacle = listeSpectacle;
     }
+
+    public List<PlanningSalle> getAll() {
+        return DAO.getAll();
+    }
+    
+    public List<PlanningSalle> getLibre() {
+    	List<PlanningSalle> liste = new LinkedList<PlanningSalle>();
+    	List<PlanningSalle> listeDateDispo = new LinkedList<PlanningSalle>();
+    	liste = DAO.getAll();
+		for(PlanningSalle planS : liste) {
+			if(planS.getReserve() == false){
+				listeDateDispo.add(planS);
+			}
+		}	
+		return listeDateDispo;
+    }
+	
+	/*METHODES*/
+    public boolean checkDate(PlanningSalle date) {
+    	List<PlanningSalle> liste = new LinkedList<PlanningSalle>();
+		liste = DAO.getAll();
+		for(PlanningSalle planS : liste) {
+			if(planS.equals(date)){
+				return true;
+			}
+		}			
+		return false;
+	}
+
+	public boolean AddPlanningSalle(PlanningSalle salle) {	
+		return DAO.create(salle);		
+	}
+	
+	public boolean DeletePlanningSalle(PlanningSalle salle) {	
+		return DAO.delete(salle);		
+	}
+	
+	public boolean AnnulerReservation(PlanningSalle salle) {
+		salle.setReserve(false);	
+		return DAO.update(salle);
+	}
+		
+	public boolean Update() {
+		return DAO.update(this);
+	}
+	
+	
+	 @Override
+	    public String toString() { 
+	        return String.format(idPlanning + " - " + dateDebutR + " - " + dateFinR); 
+	    }
+	 @Override
+     public boolean equals(Object obj) { // compare les valeurs des objets
+       PlanningSalle plaS;
+       if (obj ==null || obj.getClass()!=this.getClass()){
+           return false;
+       }
+
+       else {
+           plaS =(PlanningSalle)obj;
+           if(
+                   plaS.getDateDebutR().equals(getDateDebutR()) //vu que type primitif == pas equals
+                   & plaS.getDateFinR().equals(getDateFinR())) { 
+               {
+                   return true;
+               }
+           }
+
+           else {
+                   return false;
+           }
+       }
+   }
+
+   // Surcharge de hashCode
+   @Override
+   public int hashCode() {
+       return Objects.hash(dateDebutR, dateFinR);
+   }	
+   
+   
+   public PlanningSalle getPlanningParSpectacle(int idSpectacle) {
+       List<PlanningSalle> list = new LinkedList<PlanningSalle>();
+       list = DAO.getAll();
+       PlanningSalle planningSpec = new PlanningSalle();
+
+       for(int i = 0; i<list.size(); i++) {
+           if(list.get(i).getIdPlanning() == idSpectacle) {
+        	   planningSpec = list.get(i);
+           }
+       }
+       return planningSpec;
+   }
+   
+   @SuppressWarnings("deprecation")
+   public double prixLocation() {
+           Date dateModif = null;
+           try {
+        	   dateModif = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateDebutR);
+           } catch (ParseException e) {
+               e.printStackTrace();
+           }
+           if(dateModif.getDay() == 5 || dateModif.getDay() == 6) {
+               return 4500;
+           }
+           return 3000;
+    }
+   
+}

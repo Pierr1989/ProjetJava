@@ -95,3 +95,22 @@ public abstract class Personne implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    @Override
+    public String toString() { 
+        return String.format(nom + " " + prenom); 
+    }
+    
+    public boolean add() {
+    	return DAO.create(this);
+    }
+    
+    public boolean delete(Personne obj) {
+        return DAO.delete(obj);
+    }
+    
+    public List<? extends Personne> getAll() {	//solution pour que filles héritent de la méthode getAll()
+        return DAO.getAll();
+    }
+    
+}
